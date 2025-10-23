@@ -1,0 +1,56 @@
+<div class="container d-flex align-items-center justify-content-center min-vh-100">
+  <div class="card shadow p-4" style="max-width: 400px; width: 100%;">
+    <h3 class="text-center mb-4">Iniciar Sesión</h3>
+
+    <form #loginForm="ngForm" (ngSubmit)="login(loginForm)">
+      <div class="mb-3">
+        <label for="email" class="form-label">Correo electrónico</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="form-control"
+          ngModel
+          required
+          email
+          (input)="clearError()"
+          placeholder="ejemplo@correo.com"
+        />
+        <div *ngIf="loginForm.submitted && loginForm.controls['email']?.invalid" class="text-danger small mt-1">
+          Ingrese un correo válido.
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Contraseña</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="form-control"
+          ngModel
+          required
+          minlength="6"
+          (input)="clearError()"
+          placeholder="********"
+        />
+        <div *ngIf="loginForm.submitted && loginForm.controls['password']?.invalid" class="text-danger small mt-1">
+          La contraseña es requerida (mínimo 6 caracteres).
+        </div>
+      </div>
+
+      <div *ngIf="error" class="alert alert-danger py-2">
+        {{ error }}
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary w-100"
+        [disabled]="loading"
+      >
+        <span *ngIf="!loading">Ingresar</span>
+        <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+      </button>
+    </form>
+  </div>
+</div>

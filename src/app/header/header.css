@@ -1,0 +1,45 @@
+.header-top {
+            background-color: #FFFCBE;
+            padding: 10px 0;
+            border-bottom: 2px solid #e6e3a8;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+        }
+        
+        .brand-name {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #FFA500;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin: 0;
+            font-family: 'Arial Black', sans-serif;
+            letter-spacing: 2px;
+        }
+        
+        .contact-info {
+            font-size: 0.9rem;
+            color: #333;
+            margin: 0;
+        }
+        
+        .social-media {
+            font-size: 0.9rem;
+            color: #333;
+            text-align: right;
+        }
+        
+        .hero-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
