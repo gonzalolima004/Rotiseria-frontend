@@ -1,0 +1,35 @@
+<div class="container mt-4">
+  <h2>{{ modoEdicion ? 'Editar Categoría' : 'Crear Categoría' }}</h2>
+
+  <form [formGroup]="categoriaForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="nombre_categoria" class="form-label">Nombre de la Categoría</label>
+      <input
+        type="text"
+        id="nombre_categoria"
+        formControlName="nombre_categoria"
+        class="form-control"
+        placeholder="Ej. Bebidas"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="imagen" class="form-label">Imagen</label>
+      <input
+        type="file"
+        id="imagen"
+        class="form-control"
+        (change)="onFileChange($event)"
+        accept="image/*"
+      />
+    </div>
+
+    <div *ngIf="preview" class="mb-3 text-center">
+      <img [src]="preview" alt="Vista previa" class="img-thumbnail" width="200">
+    </div>
+
+    <button type="submit" class="btn btn-success" [disabled]="categoriaForm.invalid">
+      {{ modoEdicion ? 'Actualizar' : 'Crear' }}
+    </button>
+  </form>
+</div>
