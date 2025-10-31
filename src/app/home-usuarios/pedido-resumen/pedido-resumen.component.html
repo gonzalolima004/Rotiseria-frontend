@@ -1,0 +1,33 @@
+<div class="card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <span>Pedido</span>
+    <span class="badge bg-secondary">{{ items.length }}</span>
+  </div>
+  <div class="card-body p-0">
+    <ul class="list-group list-group-flush" *ngIf="items.length > 0; else vacio">
+      <li class="list-group-item" *ngFor="let item of items">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span>{{ item.nombre_producto }}</span>
+          <button class="btn btn-sm btn-outline-danger" (click)="eliminarItem(item)">x</button>
+        </div>
+        <div class="d-flex justify-content-between align-items-center">
+          <input type="number" min="1" class="form-control form-control-sm me-2" style="width: 80px"
+                 [value]="item.cantidad" (input)="cambiarCant(item, $event)">
+          <span>$ {{ item.subtotal }}</span>
+        </div>
+      </li>
+    </ul>
+    <ng-template #vacio>
+      <p class="p-3 mb-0 text-muted">No hay productos en el pedido.</p>
+    </ng-template>
+  </div>
+  <div class="card-footer">
+    <div class="d-flex justify-content-between mb-3">
+      <strong>Total</strong>
+      <strong>$ {{ total }}</strong>
+    </div>
+    <button class="btn btn-success w-100" [disabled]="items.length === 0" (click)="finalizarPedido()">
+      Finalizar pedido
+    </button>
+  </div>
+</div>

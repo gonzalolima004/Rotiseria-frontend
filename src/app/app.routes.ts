@@ -1,6 +1,6 @@
 import { Routes, provideRouter } from '@angular/router';
 import { Login } from './login/login';
-import { HomeUsuarios } from './home-usuarios/home-usuarios';
+import { HomeUsuariosComponent } from './home-usuarios/home-usuarios.component';
 import { HomeAdmin } from './home-admin/home-admin';
 import { AuthGuard } from './services/auth-guard';
 import { ProductoFormComponent } from './pages/producto-form/producto-form.component';
@@ -9,7 +9,7 @@ import { CategoriaFormComponent } from './pages/categoria-form/categoria-form.co
 import { CategoriaListComponent } from './pages/categoria-list/categoria-list.component';
 
 export const routes: Routes = [
-    { path: '', component: HomeUsuarios },
+    { path: '', component: HomeUsuariosComponent },
     { path: 'ingresar', component: Login },
     { path: 'admin', component: HomeAdmin, canActivate: [AuthGuard] },
     { path: 'productos', component: ProductoFormComponent, canActivate: [AuthGuard] },

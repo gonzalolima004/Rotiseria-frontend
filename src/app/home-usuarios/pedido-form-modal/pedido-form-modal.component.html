@@ -1,0 +1,47 @@
+<div class="modal-backdrop fade show"></div>
+<div class="modal fade show d-block" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Datos del cliente</h5>
+        <button type="button" class="btn-close" (click)="cerrarModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label class="form-label">DNI</label>
+            <input type="text" class="form-control" [(ngModel)]="dni_cliente" name="dni_cliente" maxlength="9">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Nombre</label>
+            <input type="text" class="form-control" [(ngModel)]="nombre_cliente" name="nombre_cliente">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Teléfono</label>
+            <input type="text" class="form-control" [(ngModel)]="telefono_cliente" name="telefono_cliente">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Tipo de entrega</label>
+            <select class="form-select" [(ngModel)]="id_modalidad_entrega" name="id_modalidad_entrega" (change)="onChangeModalidad($event)">
+              <option [value]="1">Retiro en local</option>
+              <option [value]="2">Envío a domicilio</option>
+            </select>
+          </div>
+          <div class="mb-3" *ngIf="id_modalidad_entrega === 2">
+            <label class="form-label">Dirección</label>
+            <input type="text" class="form-control" [(ngModel)]="direccion_cliente" name="direccion_cliente">
+          </div>
+          <div class="alert alert-secondary py-2 mb-0">
+            Total a pagar: <strong>$ {{ total }}</strong>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="cerrarModal()" [disabled]="cargando">Cancelar</button>
+        <button class="btn btn-primary" (click)="enviarPedido()" [disabled]="cargando">
+          {{ cargando ? 'Enviando...' : 'Realizar pedido' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
