@@ -1,5 +1,11 @@
 import { HttpInterceptorFn } from '@angular/common/http';
+
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  if (typeof window === 'undefined' || !window.localStorage) {
+    console.warn('AuthInterceptor: localStorage no disponible (SSR o build).');
+    return next(req);
+  }
+
   const token = localStorage.getItem('token');
 
   console.debug('AuthInterceptor token (raw):', token);
@@ -10,8 +16,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       .replace(/^Bearer\s+/i, '')
       .trim();
 
-    console.debug('AuthInterceptor token (sanitized):',
-      sanitizedToken);
+    console.debug('AuthInterceptor token (sanitized):', sanitizedToken);
 
     const authReq = req.clone({
       setHeaders: { Authorization: `Bearer ${sanitizedToken}` }

@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Header } from '../header/header';
 
 @Component({
   selector: 'app-home-usuarios',
-  imports: [Header],
+  standalone: true,
+  imports: [CommonModule, Header],
   templateUrl: './home-usuarios.html',
-  styleUrl: './home-usuarios.css'
+  styleUrls: ['./home-usuarios.css']
 })
-export class HomeUsuarios {
-}
+export class HomeUsuarios {}
