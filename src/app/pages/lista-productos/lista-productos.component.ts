@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { ProductoService } from '../../services/producto-service';
+import { ProductoService } from '../../services/producto.service';
 
 @Component({
   selector: 'app-lista-productos',

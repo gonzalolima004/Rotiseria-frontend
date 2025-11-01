@@ -6,19 +6,40 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ProductoService {
-  private apiUrl = 'http://localhost:8000/api';
+  private baseUrl = 'http://localhost:8000/api';
 
   constructor(private http: HttpClient) {}
 
-  getCategorias(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/categorias`);
+  // ======= 🛒 PRODUCTOS =======
+
+  obtenerProductos(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/productos`);
   }
 
-  getProductos(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/productos`);
+  obtenerProducto(id: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/productos/${id}`);
   }
 
-  getProductosPorCategoria(id_categoria: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/categorias/${id_categoria}`);
+  crearProducto(formData: FormData): Observable<any> {
+    return this.http.post(`${this.baseUrl}/productos`, formData);
+  }
+
+  actualizarProducto(id: number, formData: FormData): Observable<any> {
+    // Laravel espera POST con _method=PUT para actualización con archivos
+    return this.http.post(`${this.baseUrl}/productos/${id}?_method=PUT`, formData);
+  }
+
+  eliminarProducto(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/productos/${id}`);
+  }
+
+  // ======= 🗂️ CATEGORÍAS =======
+
+  obtenerCategorias(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/categorias`);
+  }
+
+  obtenerProductosPorCategoria(id_categoria: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/categorias/${id_categoria}`);
   }
 }

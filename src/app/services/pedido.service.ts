@@ -13,14 +13,23 @@ export class PedidoService {
 
   crearPedido(pedido: any, detalles: any[]): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/pedidos`, pedido).pipe(
-      switchMap((pedidoCreado) => {
+      switchMap((res) => {
+        // ✅ Detectar correctamente el id_pedido
+        const idPedido = res?.pedido?.id_pedido;
+
+        if (!idPedido) {
+          throw new Error('No se recibió id_pedido desde el backend.');
+        }
+
+        // ✅ Crear cada detalle con el id_pedido correcto
         const requests = detalles.map(detalle => {
           const detalleConPedido = {
             ...detalle,
-            id_pedido: pedidoCreado.id_pedido
+            id_pedido: idPedido
           };
           return this.http.post(`${this.apiUrl}/detalle_pedidos`, detalleConPedido);
         });
+
         return forkJoin(requests);
       })
     );

@@ -22,6 +22,7 @@ export class PedidoFormModalComponent {
   nombre_cliente = '';
   telefono_cliente = '';
   direccion_cliente = '';
+  id_metodo_pago = '';
   id_modalidad_entrega = 1;
   cargando = false;
 
@@ -41,31 +42,34 @@ export class PedidoFormModalComponent {
   enviarPedido() {
     if (!this.dni_cliente || !this.nombre_cliente) return;
     this.cargando = true;
-
+  
     const clientePayload = {
       dni_cliente: this.dni_cliente,
       nombre_cliente: this.nombre_cliente,
       telefono_cliente: this.telefono_cliente,
-      direccion_cliente: this.id_modalidad_entrega === 2 ? this.direccion_cliente : ''
+      direccion_cliente:
+        this.id_modalidad_entrega === 2 ? this.direccion_cliente : ''
     };
-
+  
+    // Paso 1: asegurarse de que el cliente existe
     this.clienteService.obtenerOCrearCliente(clientePayload).subscribe({
-      next: (cliente) => {
+      next: () => {
+        // Paso 2: crear el pedido usando el DNI del formulario
         const pedidoPayload = {
           fecha_hora: new Date().toISOString().slice(0, 19).replace('T', ' '),
           monto_total: this.total,
-          dni_cliente: cliente.dni_cliente,
+          dni_cliente: this.dni_cliente, // ✅ usar el del formulario, no el devuelto
           id_metodo_pago: 1,
           id_estado_pedido: 1,
           id_modalidad_entrega: this.id_modalidad_entrega
         };
-
+  
         const detalles = this.items.map(it => ({
           id_producto: it.id_producto,
           cantidad: it.cantidad,
           subtotal: it.subtotal
         }));
-
+  
         this.pedidoService.crearPedido(pedidoPayload, detalles).subscribe({
           next: () => {
             this.cargando = false;
@@ -78,8 +82,9 @@ export class PedidoFormModalComponent {
             });
             this.pedidoRealizado.emit();
           },
-          error: () => {
+          error: (error) => {
             this.cargando = false;
+            console.error('Error al crear pedido:', error);
             Swal.fire({
               icon: 'error',
               title: 'Error',
@@ -88,14 +93,15 @@ export class PedidoFormModalComponent {
           }
         });
       },
-      error: () => {
+      error: (error) => {
         this.cargando = false;
+        console.error('Error al crear cliente:', error);
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: 'No se pudo validar el cliente'
+          text: 'No se pudo registrar o buscar el cliente'
         });
       }
     });
   }
-}
+}  
