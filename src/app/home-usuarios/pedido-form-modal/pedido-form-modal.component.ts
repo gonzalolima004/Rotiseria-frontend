@@ -29,29 +29,101 @@ export class PedidoFormModalComponent {
   constructor(
     private clienteService: ClienteService,
     private pedidoService: PedidoService
-  ) {}
+  ) { }
 
   cerrarModal() {
     this.cerrar.emit();
   }
 
-  onChangeModalidad(event: any) {
-    this.id_modalidad_entrega = event.target.value;
+  buscarClientePorDni() {
+    if (this.dni_cliente.trim().length === 8) {
+      this.clienteService.obtenerClientePorDni(this.dni_cliente).subscribe({
+        next: (res) => {
+          if (res && res.cliente) {
+            const cliente = res.cliente;
+            this.nombre_cliente = cliente.nombre_cliente;
+            this.telefono_cliente = cliente.telefono_cliente;
+            this.direccion_cliente = cliente.direccion_cliente;
+
+            Swal.fire({
+              icon: 'info',
+              title: 'Cliente encontrado',
+              text: 'Los datos se completaron automáticamente.',
+              timer: 1500,
+              showConfirmButton: false
+            });
+          }
+        },
+        error: () => {
+          console.log('Cliente no encontrado, se completará manualmente.');
+        }
+      });
+    }
   }
 
   enviarPedido() {
-    if (!this.dni_cliente || !this.nombre_cliente) return;
+    // 🔹 VALIDACIONES DE CAMPOS
+    if (!this.dni_cliente.trim() || !this.nombre_cliente.trim() || !this.telefono_cliente.trim()) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Campos incompletos',
+        text: 'Por favor completá todos los campos antes de continuar.',
+        confirmButtonColor: '#CAA021'
+      });
+      return;
+    }
+
+    if (!this.id_modalidad_entrega) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Modalidad de entrega',
+        text: 'Debes seleccionar una modalidad de entrega antes de continuar.',
+        confirmButtonColor: '#CAA021'
+      });
+      return;
+    }
+
+    if (this.id_modalidad_entrega === '2' && !this.direccion_cliente.trim()) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Dirección requerida',
+        text: 'Por favor ingresá una dirección para el envío a domicilio.',
+        confirmButtonColor: '#CAA021'
+      });
+      return;
+    }
+
+    if (!this.id_metodo_pago) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Método de pago',
+        text: 'Seleccioná una forma de pago para continuar.',
+        confirmButtonColor: '#CAA021'
+      });
+      return;
+    }
+
+    if (!this.items || this.items.length === 0) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Sin productos',
+        text: 'No se puede realizar un pedido sin productos seleccionados.',
+        confirmButtonColor: '#CAA021'
+      });
+      return;
+    }
+
+    // 🔹 CONTINÚA SI TODO ESTÁ COMPLETO
     this.cargando = true;
-  
+
     const clientePayload = {
       dni_cliente: this.dni_cliente,
       nombre_cliente: this.nombre_cliente,
       telefono_cliente: this.telefono_cliente,
       direccion_cliente:
-        this.id_modalidad_entrega === '2' ? this.direccion_cliente : ''
+        this.id_modalidad_entrega == '2' ? this.direccion_cliente : ''
     };
-  
-    // Paso 1: asegurarse de que el cliente existe
+
     this.clienteService.obtenerOCrearCliente(clientePayload).subscribe({
       next: () => {
         const pedidoPayload = {
@@ -62,24 +134,31 @@ export class PedidoFormModalComponent {
           id_estado_pedido: 1,
           id_modalidad_entrega: this.id_modalidad_entrega
         };
-  
+
         const detalles = this.items.map(it => ({
           id_producto: it.id_producto,
           cantidad: it.cantidad,
           subtotal: it.subtotal
         }));
-  
+
         this.pedidoService.crearPedido(pedidoPayload, detalles).subscribe({
           next: () => {
             this.cargando = false;
             Swal.fire({
               icon: 'success',
-              title: 'Pedido realizado',
-              text: 'Muchas gracias',
-              timer: 2000,
-              showConfirmButton: false
+              title: '¡Pedido realizado!',
+              text: 'Te avisaremos por WhatsApp cuando esté próximo a prepararse',
+              showCloseButton: true,
+              confirmButtonText: 'Realizar otro pedido',
+              confirmButtonColor: '#CAA021',
+              allowOutsideClick: false,
+              allowEscapeKey: false
+            }).then(() => {
+              this.pedidoRealizado.emit();
+              window.location.reload();
             });
-            this.pedidoRealizado.emit();
+
+
           },
           error: (error) => {
             this.cargando = false;
@@ -94,7 +173,7 @@ export class PedidoFormModalComponent {
       },
       error: (error) => {
         this.cargando = false;
-        console.error('Error al crear cliente:', error);
+        console.error('❌ Error al crear cliente:', error);
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -103,4 +182,4 @@ export class PedidoFormModalComponent {
       }
     });
   }
-}  
+}

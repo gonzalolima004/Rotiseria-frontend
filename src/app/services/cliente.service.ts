@@ -9,7 +9,7 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 export class ClienteService {
   private apiUrl = 'http://localhost:8000/api/clientes';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   obtenerClientePorDni(dni: string): Observable<any | null> {
     return this.http.get<any>(`${this.apiUrl}/${dni}`).pipe(
@@ -24,9 +24,17 @@ export class ClienteService {
   obtenerOCrearCliente(cliente: any): Observable<any> {
     return this.obtenerClientePorDni(cliente.dni_cliente).pipe(
       switchMap((existe) => {
-        if (existe) return of(existe);
+        if (existe) {
+          // Si ya existe, actualizarlo con los nuevos datos
+          return this.actualizarCliente(cliente.dni_cliente, cliente);
+        }
+        // Si no existe, crearlo
         return this.crearCliente(cliente);
       })
     );
+  }
+
+  actualizarCliente(dni: string, cliente: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${dni}`, cliente);
   }
 }

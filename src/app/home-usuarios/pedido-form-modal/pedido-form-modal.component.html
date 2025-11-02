@@ -11,7 +11,7 @@
               <circle cx="12" cy="7" r="4"></circle>
             </svg>
           </div>
-          <h5 class="modal-title fw-bold m-0">Datos del pedido</h5>
+          <h2 class="modal-title fw-bold m-0">Datos del pedido</h2>
         </div>
         <button type="button" class="btn-close btn-close-black" (click)="cerrarModal()"></button>
       </div>
@@ -22,24 +22,49 @@
           <div class="row g-3 mb-3">
             <div class="col-md-6">
               <label class="form-label fw-bold small text-muted text-uppercase">DNI</label>
-              <input type="text" class="form-control form-control-lg" [(ngModel)]="dni_cliente" name="dni_cliente" maxlength="8" placeholder="Ej: 44441308">
+              <input
+                type="text"
+                class="form-control form-control-lg"
+                [(ngModel)]="dni_cliente"
+                name="dni_cliente"
+                maxlength="8"
+                placeholder="Ej: 44441308"
+                (blur)="buscarClientePorDni()" />
             </div>
             <div class="col-md-6">
               <label class="form-label fw-bold small text-muted text-uppercase">Nombre completo</label>
-              <input type="text" class="form-control form-control-lg" [(ngModel)]="nombre_cliente" name="nombre_cliente" placeholder="Tu nombre completo">
+              <input
+                maxlength="50"
+                type="text"
+                class="form-control form-control-lg"
+                [(ngModel)]="nombre_cliente"
+                name="nombre_cliente"
+                placeholder="Tu nombre completo" />
             </div>
           </div>
 
           <div class="mb-3">
             <label class="form-label fw-bold small text-muted text-uppercase">Teléfono</label>
-            <input maxlength="15" type="text" class="form-control form-control-lg" [(ngModel)]="telefono_cliente" name="telefono_cliente" placeholder="Ej: 3454030582">
+            <input
+              maxlength="15"
+              type="text"
+              class="form-control form-control-lg"
+              [(ngModel)]="telefono_cliente"
+              name="telefono_cliente"
+              placeholder="Ej: 3454030582" />
           </div>
 
           <div class="mb-3">
             <label class="form-label fw-bold small text-muted text-uppercase d-block mb-3">Tipo de entrega</label>
             <div class="checkbox-group">
               <div class="form-check form-check-card">
-                <input class="form-check-input" type="radio" name="modalidad_entrega" id="retiro" [value]="1" [(ngModel)]="id_modalidad_entrega">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="modalidad_entrega"
+                  id="retiro"
+                  [value]="1"
+                  [(ngModel)]="id_modalidad_entrega" />
                 <label class="form-check-label" for="retiro">
                   <div class="check-content">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -50,9 +75,15 @@
                   </div>
                 </label>
               </div>
-              
+
               <div class="form-check form-check-card">
-                <input class="form-check-input" type="radio" name="modalidad_entrega" id="envio" [value]="2" [(ngModel)]="id_modalidad_entrega">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="modalidad_entrega"
+                  id="envio"
+                  [value]="2"
+                  [(ngModel)]="id_modalidad_entrega" />
                 <label class="form-check-label" for="envio">
                   <div class="check-content">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -70,14 +101,26 @@
 
           <div class="mb-3 slide-down" *ngIf="id_modalidad_entrega == '2'">
             <label class="form-label fw-bold small text-muted text-uppercase">Dirección de entrega</label>
-            <input type="text" class="form-control form-control-lg" [(ngModel)]="direccion_cliente" name="direccion_cliente" placeholder="Calle, número, apartamento">
+            <input
+              type="text"
+              maxlength="40"
+              class="form-control form-control-lg"
+              [(ngModel)]="direccion_cliente"
+              name="direccion_cliente"
+              placeholder="Calle, número, apartamento" />
           </div>
 
           <div class="mb-4">
             <label class="form-label fw-bold small text-muted text-uppercase d-block mb-3">Forma de pago</label>
             <div class="checkbox-group">
               <div class="form-check form-check-card">
-                <input class="form-check-input" type="radio" name="metodo_pago" id="efectivo" [value]="1" [(ngModel)]="id_metodo_pago">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="metodo_pago"
+                  id="efectivo"
+                  [value]="1"
+                  [(ngModel)]="id_metodo_pago" />
                 <label class="form-check-label" for="efectivo">
                   <div class="check-content">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -88,9 +131,15 @@
                   </div>
                 </label>
               </div>
-              
+
               <div class="form-check form-check-card">
-                <input class="form-check-input" type="radio" name="metodo_pago" id="tarjeta" [value]="2" [(ngModel)]="id_metodo_pago">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="metodo_pago"
+                  id="tarjeta"
+                  [value]="2"
+                  [(ngModel)]="id_metodo_pago" />
                 <label class="form-check-label" for="tarjeta">
                   <div class="check-content">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -101,9 +150,15 @@
                   </div>
                 </label>
               </div>
-              
+
               <div class="form-check form-check-card">
-                <input class="form-check-input" type="radio" name="metodo_pago" id="transferencia" [value]="3" [(ngModel)]="id_metodo_pago">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="metodo_pago"
+                  id="transferencia"
+                  [value]="3"
+                  [(ngModel)]="id_metodo_pago" />
                 <label class="form-check-label" for="transferencia">
                   <div class="check-content">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -129,7 +184,7 @@
           Cancelar
         </button>
         <button class="btn btn-primary btn-lg flex-grow-1 fw-bold" (click)="enviarPedido()" [disabled]="cargando">
-          {{ cargando ? 'Enviando...' : 'Realizar pedido' }}
+          {{ cargando ? 'Procesando...' : 'Realizar pedido' }}
         </button>
       </div>
     </div>
