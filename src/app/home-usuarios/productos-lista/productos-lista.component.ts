@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductoService } from '../../services/producto.service';
 
@@ -11,42 +11,74 @@ import { ProductoService } from '../../services/producto.service';
 })
 export class ProductosListaComponent implements OnInit {
   @Output() agregar = new EventEmitter<any>();
+
+  categorias: any[] = [];
   productos: any[] = [];
-  productosPorCategoria: any[] = [];
-  cargando = false;
+
+  @ViewChild('carousel', { static: false }) carousel!: ElementRef;
 
   constructor(private productoService: ProductoService) {}
 
   ngOnInit(): void {
-    this.cargando = true;
-    this.productoService.obtenerProductos().subscribe({
-      next: (data) => {
-        this.productos = data.filter(p => p.disponible === 1);
-        this.agruparPorCategoria();
-        this.cargando = false;
-      },
-      error: () => {
-        this.cargando = false;
-      }
+    this.cargarCategorias();
+    this.cargarProductos();
+  }
+
+  cargarCategorias() {
+    this.productoService.obtenerCategorias().subscribe({
+      next: (data) => (this.categorias = data),
+      error: (err) => console.error('Error al cargar categorías', err)
     });
   }
 
-  agruparPorCategoria() {
-    const grupos: { [key: string]: any[] } = {};
-
-    this.productos.forEach(prod => {
-      const categoria = prod.categoria?.nombre_categoria || 'Sin categoría';
-      if (!grupos[categoria]) grupos[categoria] = [];
-      grupos[categoria].push(prod);
+  cargarProductos() {
+    this.productoService.obtenerProductos().subscribe({
+      next: (data) => (this.productos = data.filter(p => p.disponible === 1)),
+      error: (err) => console.error('Error al cargar productos', err)
     });
+  }
 
-    this.productosPorCategoria = Object.entries(grupos).map(([nombre, productos]) => ({
-      nombre,
-      productos
-    }));
+  filtrarProductosPorCategoria(id_categoria: number) {
+    return this.productos.filter(p => p.id_categoria === id_categoria);
   }
 
   agregarProducto(producto: any) {
     this.agregar.emit(producto);
   }
+
+  scrollLeft() {
+    this.carousel.nativeElement.scrollBy({ left: -200, behavior: 'smooth' });
+  }
+
+  scrollRight() {
+    this.carousel.nativeElement.scrollBy({ left: 200, behavior: 'smooth' });
+  }
+
+  scrollToCategoria(id: number) {
+    const element = document.getElementById('cat-' + id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  scrollUp() {
+    const carousel = document.querySelector('.categoria-container-vertical');
+    if (carousel) {
+      carousel.scrollBy({
+        top: -100,
+        behavior: 'smooth'
+      });
+    }
+  }
+
+  scrollDown() {
+    const carousel = document.querySelector('.categoria-container-vertical');
+    if (carousel) {
+      carousel.scrollBy({
+        top: 100,
+        behavior: 'smooth'
+      });
+    }
+  }
+
 }

@@ -23,7 +23,7 @@ export class PedidoFormModalComponent {
   telefono_cliente = '';
   direccion_cliente = '';
   id_metodo_pago = '';
-  id_modalidad_entrega = 1;
+  id_modalidad_entrega = '';
   cargando = false;
 
   constructor(
@@ -36,7 +36,7 @@ export class PedidoFormModalComponent {
   }
 
   onChangeModalidad(event: any) {
-    this.id_modalidad_entrega = Number(event.target.value);
+    this.id_modalidad_entrega = event.target.value;
   }
 
   enviarPedido() {
@@ -48,18 +48,17 @@ export class PedidoFormModalComponent {
       nombre_cliente: this.nombre_cliente,
       telefono_cliente: this.telefono_cliente,
       direccion_cliente:
-        this.id_modalidad_entrega === 2 ? this.direccion_cliente : ''
+        this.id_modalidad_entrega === '2' ? this.direccion_cliente : ''
     };
   
     // Paso 1: asegurarse de que el cliente existe
     this.clienteService.obtenerOCrearCliente(clientePayload).subscribe({
       next: () => {
-        // Paso 2: crear el pedido usando el DNI del formulario
         const pedidoPayload = {
           fecha_hora: new Date().toISOString().slice(0, 19).replace('T', ' '),
           monto_total: this.total,
-          dni_cliente: this.dni_cliente, // ✅ usar el del formulario, no el devuelto
-          id_metodo_pago: 1,
+          dni_cliente: this.dni_cliente,
+          id_metodo_pago: this.id_metodo_pago,
           id_estado_pedido: 1,
           id_modalidad_entrega: this.id_modalidad_entrega
         };

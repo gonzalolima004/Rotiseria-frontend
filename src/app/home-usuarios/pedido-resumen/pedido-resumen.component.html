@@ -1,33 +1,86 @@
-<div class="card">
-  <div class="card-header d-flex justify-content-between align-items-center">
-    <span>Pedido</span>
-    <span class="badge bg-secondary">{{ items.length }}</span>
+<div class="order-container">
+  <!-- Mejorado header con diseño más moderno y espaciado -->
+  <div class="order-header">
+    <div class="order-title-section">
+      <h3 class="order-title">Tu Pedido</h3>
+      <span class="order-badge">{{ items.length }} item{{ items.length !== 1 ? 's' : '' }}</span>
+    </div>
+    <div class="order-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="9" cy="21" r="1"></circle>
+        <circle cx="20" cy="21" r="1"></circle>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+      </svg>
+    </div>
   </div>
-  <div class="card-body p-0">
-    <ul class="list-group list-group-flush" *ngIf="items.length > 0; else vacio">
-      <li class="list-group-item" *ngFor="let item of items">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-          <span>{{ item.nombre_producto }}</span>
-          <button class="btn btn-sm btn-outline-danger" (click)="eliminarItem(item)">x</button>
+
+  <!-- Contenedor principal con mejor visualización de items -->
+  <div class="order-body">
+    <!-- Items con mejor diseño y espaciado -->
+    <div class="order-items" *ngIf="items.length > 0; else vacio">
+      <div class="order-item" *ngFor="let item of items">
+        <!-- Item header con nombre y botón eliminar -->
+        <div class="item-header">
+          <div class="item-info">
+            <h5 class="item-name">{{ item.nombre_producto }}</h5>
+            <p class="item-subtitle">Producto seleccionado</p>
+          </div>
+          <button class="btn-delete" (click)="eliminarItem(item)" title="Eliminar producto">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+          </button>
         </div>
-        <div class="d-flex justify-content-between align-items-center">
-          <input type="number" min="1" class="form-control form-control-sm me-2" style="width: 80px"
-                 [value]="item.cantidad" (input)="cambiarCant(item, $event)">
-          <span>$ {{ item.subtotal }}</span>
+
+        <!-- Cantidad y subtotal con mejor layout -->
+        <div class="item-controls">
+          <div class="quantity-control">
+            <label class="quantity-label">Cantidad</label>
+            <div class="quantity-input-group">
+              <button class="qty-btn" (click)="cambiarCant(item, {target: {value: item.cantidad - 1}})" [disabled]="item.cantidad <= 1">−</button>
+              <input type="number" min="1" class="quantity-input" 
+                     [value]="item.cantidad" (input)="cambiarCant(item, $event)">
+              <button class="qty-btn" (click)="cambiarCant(item, {target: {value: item.cantidad + 1}})">+</button>
+            </div>
+          </div>
+          
+          <div class="subtotal-section">
+            <p class="subtotal-label">Subtotal</p>
+            <p class="subtotal-price">${{ item.subtotal }}</p>
+          </div>
         </div>
-      </li>
-    </ul>
+      </div>
+    </div>
+
+    <!-- Estado vacío mejorado -->
     <ng-template #vacio>
-      <p class="p-3 mb-0 text-muted">No hay productos en el pedido.</p>
+      <div class="empty-state">
+        <svg class="empty-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        <p class="empty-text">No hay productos en tu pedido</p>
+        <p class="empty-subtext">Agrega artículos para continuar</p>
+      </div>
     </ng-template>
   </div>
-  <div class="card-footer">
-    <div class="d-flex justify-content-between mb-3">
-      <strong>Total</strong>
-      <strong>$ {{ total }}</strong>
+
+  <!-- Footer mejorado con total prominente y botón de acción destacado -->
+  <div class="order-footer">
+    <div class="total-section">
+      <div class="total-row final">
+        <strong class="total-final-label">Total a pagar</strong>
+        <strong class="total-final-value">$ {{ total }}</strong>
+      </div>
     </div>
-    <button class="btn btn-success w-100" [disabled]="items.length === 0" (click)="finalizarPedido()">
-      Finalizar pedido
+
+    <button class="btn-checkout" [disabled]="items.length === 0" (click)="finalizarPedido()">
+      <span class="btn-text">Finalizar pedido</span>
+      <svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
     </button>
   </div>
 </div>
