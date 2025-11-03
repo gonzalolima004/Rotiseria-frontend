@@ -1,3 +1,53 @@
 <app-header></app-header>
 
-<p>home-admin works!</p>
+<div class="admin-container">
+  <div class="banner">
+    <img src="assets/images/banner-burger.jpg" alt="Banner de hamburguesas">
+  </div>
+
+  <div class="panel-admin">
+    <h1 class="titulo">Panel de Administración</h1>
+
+    <div class="botones-categorias">
+      <button (click)="abrirModalCrear()" class="btn-agregar">➕ Agregar categoría</button>
+    </div>
+
+    <!-- Carrusel de categorías -->
+    <div class="carrusel-container">
+      <button class="flecha-izquierda" (click)="moverCarrusel('izquierda')">❮</button>
+
+      <div class="carrusel" #carrusel>
+        <div *ngFor="let categoria of categorias" class="categoria-card">
+          <img [src]="categoria.imagen || 'assets/images/default.jpg'" alt="{{ categoria.nombre_categoria }}">
+          <span class="nombre-categoria">{{ categoria.nombre_categoria }}</span>
+          <div class="acciones">
+            <button (click)="abrirModalEditar(categoria)" class="btn-editar">Editar</button>
+            <button (click)="eliminarCategoria(categoria.id_categoria)" class="btn-eliminar">Eliminar</button>
+          </div>
+        </div>
+      </div>
+
+      <button class="flecha-derecha" (click)="moverCarrusel('derecha')">❯</button>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-backdrop" *ngIf="mostrarModal">
+    <div class="modal">
+      <h2>{{ esEdicion ? 'Editar categoría' : 'Agregar nueva categoría' }}</h2>
+
+      <form (ngSubmit)="guardarCategoria()">
+        <label>Nombre de la categoría</label>
+        <input type="text" [(ngModel)]="categoriaActual.nombre_categoria" name="nombre_categoria" required>
+
+        <label>Imagen (URL o archivo temporal)</label>
+        <input type="text" [(ngModel)]="categoriaActual.imagen" name="imagen" placeholder="URL de la imagen">
+
+        <div class="modal-botones">
+          <button type="submit" class="btn-guardar">{{ esEdicion ? 'Guardar cambios' : 'Agregar' }}</button>
+          <button type="button" class="btn-cancelar" (click)="cerrarModal()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
