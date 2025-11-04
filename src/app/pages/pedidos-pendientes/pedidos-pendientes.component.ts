@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { PedidoService } from '../../services/pedido-pendiente.service';
-import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-pedidos-pendientes',
-  imports: [CommonModule, HttpClientModule],
+  standalone: true, 
+  imports: [CommonModule], 
   templateUrl: './pedidos-pendientes.component.html',
   styleUrls: ['./pedidos-pendientes.component.css']
 })
