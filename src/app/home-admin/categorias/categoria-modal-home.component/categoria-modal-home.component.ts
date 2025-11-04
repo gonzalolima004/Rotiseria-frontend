@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Categoria } from 'src/app/models/categoria.model';
+import { Categoria } from '../../models/categoria.model';
 
 @Component({
   selector: 'app-categoria-modal-home',
@@ -15,41 +15,38 @@ export class CategoriaModalHomeComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
   @Output() save = new EventEmitter<FormData>();
 
-  categoriaForm!: FormGroup;
-
-  imagenSeleccionada: File | null = null;
-  preview: string | ArrayBuffer | null = null;
+  formulario!: FormGroup;
+  imagen: File | null = null;
+  preview: any = null;
 
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
-    this.categoriaForm = this.fb.group({
-      nombre_categoria: [this.categoria?.nombre_categoria || '', Validators.required],
+    this.formulario = this.fb.group({
+      nombre_categoria: [this.categoria?.nombre_categoria || '', Validators.required]
     });
   }
 
-  onFileChange(event: any): void {
+  seleccionarImagen(event: any) {
     const file = event.target.files[0];
-    if (file) {
-      this.imagenSeleccionada = file;
+    if (!file) return;
 
-      const reader = new FileReader();
-      reader.onload = () => (this.preview = reader.result);
-      reader.readAsDataURL(file);
-    }
+    this.imagen = file;
+
+    const lector = new FileReader();
+    lector.onload = () => this.preview = lector.result;
+    lector.readAsDataURL(file);
   }
 
-  submit(): void {
-    if (this.categoriaForm.invalid) return;
+  guardar() {
+    if (this.formulario.invalid) return;
 
     const formData = new FormData();
-    formData.append('nombre_categoria', this.categoriaForm.get('nombre_categoria')?.value);
+    formData.append('nombre_categoria', this.formulario.get('nombre_categoria')?.value);
 
-    if (this.imagenSeleccionada) {
-      formData.append('imagen', this.imagenSeleccionada);
-    }
+    if (this.imagen) formData.append('imagen', this.imagen);
 
-    if (this.categoria?.id_categoria) {
+    if (this.categoria) {
       formData.append('id_categoria', this.categoria.id_categoria.toString());
     }
 

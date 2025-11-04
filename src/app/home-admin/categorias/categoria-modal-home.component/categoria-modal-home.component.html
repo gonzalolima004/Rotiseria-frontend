@@ -13,13 +13,20 @@
       placeholder="Ej. Bebidas"
     />
 
-    <label class="label mt">Imagen (solo previsualiza)</label>
-    <input type="file" class="input-file" accept="image/*" (change)="onFileChange($event)" />
-
-    <div *ngIf="preview" class="preview">
-      <img [src]="preview" alt="">
+    <div class="mb-3">
+      <label for="imagen" class="form-label">Imagen</label>
+      <input
+         type="file"
+         id="imagen"
+         class="form-control"
+        (change)="seleccionarImagen($event)"
+        accept="image/*"
+       />
     </div>
 
+<div *ngIf="preview" class="mb-3 text-center">
+  <img [src]="preview" alt="Vista previa" class="img-thumbnail" width="200">
+</div>
     <div class="actions">
       <button type="button" class="btn cancel" (click)="close()">Cancelar</button>
       <button type="submit" class="btn save">{{ modo=='crear'?'Crear':'Guardar' }}</button>

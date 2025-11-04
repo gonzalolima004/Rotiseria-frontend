@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CategoriaService } from './categoria-service'
+import { CategoriaService } from './categoria.service'
 import { Observable } from 'rxjs';
 
 @Injectable({

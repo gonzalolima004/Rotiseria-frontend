@@ -1,11 +1,9 @@
 <app-header></app-header>
 
 <div class="admin-wrapper">
-  <!-- Banner grande con imagen de hamburguesa -->
   <div class="hero"></div>
 
   <div class="admin-grid">
-    <!-- Columna izquierda: carrusel de categorías -->
     <section class="left">
       <div class="left-header">
         <h2>Menú</h2>
@@ -15,14 +13,13 @@
         </div>
       </div>
 
-      <app-categorias-carousel
+     <app-categorias
         [categorias]="categorias"
         (editar)="openEdit($event)"
         (eliminar)="onDelete($event)"
-      ></app-categorias-carousel>
+      ></app-categorias>
     </section>
 
-    <!-- Columna derecha: accesos rápidos -->
     <aside class="right">
       <button class="pill">Sección de pedidos entrantes e historial</button>
       <button class="pill">Historial de ventas</button>

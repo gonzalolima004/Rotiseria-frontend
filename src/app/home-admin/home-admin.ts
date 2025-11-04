@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Categoria } from '../models/categoria.model';
-import { CategoriaService } from '../services/categoria-service';
+import { Categoria } from '../../models/categoria.model';
+import { CategoriaService } from '../services/categoria.service';
 
 type ModoModal = 'crear' | 'editar';
 
@@ -26,7 +26,7 @@ export class HomeAdminComponent implements OnInit {
 
   loadCategorias(): void {
     this.cargando = true;
-    this.categoriasSvc.getAll().subscribe({
+    this.categoriasSvc.obtenerCategorias().subscribe({
       next: (data) => { this.categorias = data; this.cargando = false; },
       error: () => { this.cargando = false; }
     });
@@ -69,9 +69,4 @@ export class HomeAdminComponent implements OnInit {
     });
   }
 
-  // Navegación a una pantalla de edición masiva (opcional)
-  goToEditAll(): void {
-    // routerLink si lo tenés, por ahora lo dejamos como placeholder
-    alert('Aquí podrías navegar a una pantalla de edición completa de categorías.');
-  }
 }

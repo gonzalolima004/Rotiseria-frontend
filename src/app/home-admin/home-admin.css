@@ -4,13 +4,11 @@
   --marron: #7C662A;
 }
 
-/* Lienzo general */
 .admin-wrapper {
   background: var(--amarillo-claro);
   min-height: 100vh;
 }
 
-/* Banner grande */
 .hero {
   width: 100%;
   height: 260px;
@@ -19,7 +17,7 @@
   box-shadow: 0 2px 8px rgba(0,0,0,.1);
 }
 
-/* Grid de dos columnas */
+
 .admin-grid {
   display: grid;
   grid-template-columns: 1.2fr .8fr;
@@ -72,7 +70,6 @@
   transform: translateY(1px);
 }
 
-/* Columna derecha */
 .right {
   display: flex;
   flex-direction: column;

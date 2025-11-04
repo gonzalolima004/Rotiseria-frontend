@@ -1,1 +1,19 @@
-<p>categorias works!</p>
+<div class="carousel-wrapper">
+  <button class="arrow left" (click)="scroll('left')">❮</button>
+
+  <div class="strip" #strip>
+    <div class="item" *ngFor="let cat of categorias">
+      <div class="avatar">
+        <img [src]="getImagen(cat)" alt="{{cat.nombre_categoria}}">
+      </div>
+      <div class="name">{{ cat.nombre_categoria }}</div>
+
+      <div class="card-actions">
+        <button class="mini btn-edit" (click)="editar.emit(cat)">Editar</button>
+        <button class="mini btn-del" (click)="eliminar.emit(cat)">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <button class="arrow right" (click)="scroll('right')">❯</button>
+</div>
