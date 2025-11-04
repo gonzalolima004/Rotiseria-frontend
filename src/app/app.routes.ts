@@ -7,7 +7,7 @@ import { ProductoFormComponent } from './pages/producto-form/producto-form.compo
 import { ListaProductosComponent } from './pages/lista-productos/lista-productos.component';
 import { CategoriaFormComponent } from './pages/categoria-form/categoria-form.component';
 import { CategoriaListComponent } from './pages/categoria-list/categoria-list.component';
-
+import { HistorialPedidoComponent } from './historial-pedido/historial-pedido';
 export const routes: Routes = [
     { path: '', component: HomeUsuariosComponent },
     { path: 'ingresar', component: Login },
@@ -16,6 +16,7 @@ export const routes: Routes = [
     { path: 'lista-productos', component: ListaProductosComponent, canActivate: [AuthGuard] },
     { path: 'categorias', component: CategoriaFormComponent, canActivate: [AuthGuard] },
     { path: 'lista-categorias', component: CategoriaListComponent, canActivate: [AuthGuard] },
-
+    { path: 'historial-pedido', component: HistorialPedidoComponent, canActivate: [AuthGuard] },
+    
 
 ];
