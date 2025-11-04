@@ -1,12 +1,8 @@
 <app-header></app-header>
 
 <div class="admin-container">
-  <div class="banner">
-    <img src="assets/images/banner-burger.jpg" alt="Banner de hamburguesas">
-  </div>
 
   <div class="panel-admin">
-    <h1 class="titulo">Panel de Administración</h1>
 
     <div class="botones-categorias">
       <button (click)="abrirModalCrear()" class="btn-agregar">➕ Agregar categoría</button>
@@ -18,7 +14,7 @@
 
       <div class="carrusel" #carrusel>
         <div *ngFor="let categoria of categorias" class="categoria-card">
-          <img [src]="categoria.imagen || 'assets/images/default.jpg'" alt="{{ categoria.nombre_categoria }}">
+          <!--<img [src]="categoria.imagen || 'assets/images/default.jpg'" alt="{{ categoria.nombre_categoria }}">-->
           <span class="nombre-categoria">{{ categoria.nombre_categoria }}</span>
           <div class="acciones">
             <button (click)="abrirModalEditar(categoria)" class="btn-editar">Editar</button>
