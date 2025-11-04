@@ -1,88 +1,77 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Header } from '../header/header';
-import { AdminService } from '../services/admin-service';
 import { Categoria } from '../models/categoria.model';
-import { FormsModule } from '@angular/forms';
+import { CategoriaService } from '../services/categoria-service';
+
+type ModoModal = 'crear' | 'editar';
 
 @Component({
   selector: 'app-home-admin',
-  standalone: true,
-  imports: [CommonModule, Header, FormsModule],
-  templateUrl: './home-admin.html',
-  styleUrls: ['./home-admin.css']
+  templateUrl: './home-admin.component.html',
+  styleUrls: ['./home-admin.component.css']
 })
-export class HomeAdmin implements OnInit {
-  categorias: Categoria[] = [];
-  mostrarModal = false;
-  esEdicion = false;
-  categoriaActual: any = { id_categoria: null, nombre_categoria: '' };
+export class HomeAdminComponent implements OnInit {
 
-  constructor(private adminService: AdminService) { }
+  categorias: Categoria[] = [];
+  cargando = false;
+
+  showModal = false;
+  modoModal: ModoModal = 'crear';
+  categoriaSeleccionada: Categoria | null = null;
+
+  constructor(private categoriasSvc: CategoriaService) {}
 
   ngOnInit(): void {
-    this.obtenerCategorias();
+    this.loadCategorias();
   }
 
-  obtenerCategorias(): void {
-    this.adminService.obtenerCategorias().subscribe(
-      (data) => {
-        this.categorias = data;
-      },
-      (error) => {
-        console.error('Error al obtener categorías:', error);
-      }
-    );
-  }
-
-  abrirModalCrear(): void {
-    this.mostrarModal = true;
-    this.esEdicion = false;
-    this.categoriaActual = { id_categoria: null, nombre_categoria: '' };
-  }
-
-  abrirModalEditar(categoria: Categoria): void {
-    this.mostrarModal = true;
-    this.esEdicion = true;
-    this.categoriaActual = { ...categoria };
-  }
-
-  cerrarModal(): void {
-    this.mostrarModal = false;
-  }
-
-  guardarCategoria(): void {
-    const formData = new FormData();
-    formData.append('nombre_categoria', this.categoriaActual.nombre_categoria);
-
-    if (this.esEdicion) {
-      this.adminService.actualizarCategoria(this.categoriaActual.id_categoria, formData).subscribe(() => {
-        this.obtenerCategorias();
-        this.cerrarModal();
-      });
-    } else {
-      this.adminService.crearCategoria(formData).subscribe(() => {
-        this.obtenerCategorias();
-        this.cerrarModal();
-      });
-    }
-  }
-
-  eliminarCategoria(id: number): void {
-    if (confirm('¿Seguro que deseas eliminar esta categoría?')) {
-      this.adminService.eliminarCategoria(id).subscribe(() => {
-        this.obtenerCategorias();
-      });
-    }
-  }
-
-  moverCarrusel(direccion: 'izquierda' | 'derecha') {
-    const carrusel = document.querySelector('.carrusel');
-    if (!carrusel) return;
-    const scrollAmount = 200;
-    carrusel.scrollBy({
-      left: direccion === 'izquierda' ? -scrollAmount : scrollAmount,
-      behavior: 'smooth'
+  loadCategorias(): void {
+    this.cargando = true;
+    this.categoriasSvc.getAll().subscribe({
+      next: (data) => { this.categorias = data; this.cargando = false; },
+      error: () => { this.cargando = false; }
     });
+  }
+
+  openAdd(): void {
+    this.modoModal = 'crear';
+    this.categoriaSeleccionada = null;
+    this.showModal = true;
+  }
+
+  openEdit(cat: Categoria): void {
+    this.modoModal = 'editar';
+    this.categoriaSeleccionada = { ...cat };
+    this.showModal = true;
+  }
+
+  closeModal(): void {
+    this.showModal = false;
+  }
+
+ onSave(formData: FormData) {
+  if (this.modoModal === 'crear') {
+    this.categoriasSvc.crearCategoria(formData).subscribe(() => {
+      this.showModal = false;
+      this.loadCategorias();
+    });
+  } else {
+    this.categoriasSvc.actualizarCategoria(this.categoriaSeleccionada!.id_categoria, formData).subscribe(() => {
+      this.showModal = false;
+      this.loadCategorias();
+    });
+  }
+}
+
+  onDelete(cat: Categoria): void {
+    if (!confirm(`¿Eliminar la categoría "${cat.nombre_categoria}"?`)) return;
+    this.categoriasSvc.delete(cat.id_categoria).subscribe({
+      next: () => this.loadCategorias()
+    });
+  }
+
+  // Navegación a una pantalla de edición masiva (opcional)
+  goToEditAll(): void {
+    // routerLink si lo tenés, por ahora lo dejamos como placeholder
+    alert('Aquí podrías navegar a una pantalla de edición completa de categorías.');
   }
 }

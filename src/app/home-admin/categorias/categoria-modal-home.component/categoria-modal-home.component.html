@@ -1,0 +1,28 @@
+<div class="overlay" (click)="close()"></div>
+
+<div class="modal">
+  <h3 *ngIf="modo==='crear'">Agregar Categoría</h3>
+  <h3 *ngIf="modo==='editar'">Editar Categoría</h3>
+
+  <form (ngSubmit)="submit()">
+    <label class="label">Nombre de la Categoría</label>
+    <input
+      type="text"
+      class="input"
+      formControlName="nombre_categoria"
+      placeholder="Ej. Bebidas"
+    />
+
+    <label class="label mt">Imagen (solo previsualiza)</label>
+    <input type="file" class="input-file" accept="image/*" (change)="onFileChange($event)" />
+
+    <div *ngIf="preview" class="preview">
+      <img [src]="preview" alt="">
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn cancel" (click)="close()">Cancelar</button>
+      <button type="submit" class="btn save">{{ modo=='crear'?'Crear':'Guardar' }}</button>
+    </div>
+  </form>
+</div>

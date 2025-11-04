@@ -1,0 +1,76 @@
+:root {
+  --amarillo-oscuro: #FFCA2B;
+  --marron: #7C662A;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.35);
+  z-index: 998;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: min(92vw, 450px);
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  z-index: 999;
+}
+
+.label {
+  font-weight: 700;
+  color: var(--marron);
+  margin-bottom: 5px;
+  display: block;
+}
+
+.mt { margin-top: 12px; }
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+}
+
+.input-file {
+  margin-bottom: 10px;
+}
+
+.preview {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 12px;
+  border-radius: 100%;
+  border: 3px solid var(--amarillo-oscuro);
+  overflow: hidden;
+}
+
+.preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn {
+  border: none;
+  padding: 10px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.cancel { background: #fff5c9; color: var(--marron); border:1px solid #f3d66f; }
+.save   { background: var(--amarillo-oscuro); color: var(--marron); }
