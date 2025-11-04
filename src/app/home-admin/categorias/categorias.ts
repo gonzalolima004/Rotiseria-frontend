@@ -6,8 +6,8 @@ import { Categoria } from '../../models/categoria.model';
   selector: 'app-categorias',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './categorias.component.html',
-  styleUrls: ['./categorias.component.css']
+  templateUrl: './categorias.html',
+  styleUrls: ['./categorias.css']
 })
 export class CategoriasComponent {
 

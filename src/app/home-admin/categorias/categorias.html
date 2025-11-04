@@ -1,5 +1,5 @@
 <div class="carousel-wrapper">
-  <button class="arrow left" (click)="scroll('left')">❮</button>
+  <button class="arrow left" (click)="scrollLeft()">❮</button>
 
   <div class="strip" #strip>
     <div class="item" *ngFor="let cat of categorias">
@@ -15,5 +15,5 @@
     </div>
   </div>
 
-  <button class="arrow right" (click)="scroll('right')">❯</button>
+  <button class="arrow right" (click)="scrollRight()">❯</button>
 </div>

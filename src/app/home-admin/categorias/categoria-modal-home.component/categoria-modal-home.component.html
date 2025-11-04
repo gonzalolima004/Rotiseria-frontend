@@ -1,10 +1,10 @@
-<div class="overlay" (click)="close()"></div>
+<div class="overlay" (click)="onClose()"></div>
 
 <div class="modal">
-  <h3 *ngIf="modo==='crear'">Agregar Categoría</h3>
-  <h3 *ngIf="modo==='editar'">Editar Categoría</h3>
+  <h3 *ngIf="modo === 'crear'">Agregar Categoría</h3>
+  <h3 *ngIf="modo === 'editar'">Editar Categoría</h3>
 
-  <form (ngSubmit)="submit()">
+  <form [formGroup]="formulario" (ngSubmit)="guardar()">
     <label class="label">Nombre de la Categoría</label>
     <input
       type="text"
@@ -16,20 +16,30 @@
     <div class="mb-3">
       <label for="imagen" class="form-label">Imagen</label>
       <input
-         type="file"
-         id="imagen"
-         class="form-control"
+        type="file"
+        id="imagen"
+        class="form-control"
         (change)="seleccionarImagen($event)"
         accept="image/*"
-       />
+      />
     </div>
 
-<div *ngIf="preview" class="mb-3 text-center">
-  <img [src]="preview" alt="Vista previa" class="img-thumbnail" width="200">
-</div>
+    <div *ngIf="preview" class="mb-3 text-center">
+      <img
+        [src]="preview"
+        alt="Vista previa"
+        class="img-thumbnail"
+        width="200"
+      />
+    </div>
+
     <div class="actions">
-      <button type="button" class="btn cancel" (click)="close()">Cancelar</button>
-      <button type="submit" class="btn save">{{ modo=='crear'?'Crear':'Guardar' }}</button>
+      <button type="button" class="btn cancel" (click)="onClose()">
+        Cancelar
+      </button>
+      <button type="submit" class="btn save">
+        {{ modo === 'crear' ? 'Crear' : 'Guardar' }}
+      </button>
     </div>
   </form>
 </div>
