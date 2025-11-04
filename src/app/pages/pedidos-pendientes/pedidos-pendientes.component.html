@@ -1,10 +1,17 @@
 <div class="container mt-4">
   <h2 class="text-center mb-4">📦 Pedidos Pendientes</h2>
 
-  <div *ngIf="cargando" class="text-center">Cargando pedidos...</div>
+  <!-- Cargando -->
+  <div *ngIf="cargando" class="text-center py-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-2">Cargando pedidos...</p>
+  </div>
 
-  <table *ngIf="!cargando && pedidos.length" class="table table-striped table-bordered">
-    <thead class="table-dark">
+  <!-- Tabla de pedidos -->
+  <table *ngIf="!cargando && pedidos.length" class="table table-striped table-bordered align-middle">
+    <thead class="table-dark text-center">
       <tr>
         <th>N° Pedido</th>
         <th>Cliente</th>
@@ -16,47 +23,49 @@
     <tbody>
       <tr *ngFor="let pedido of pedidos">
         <!-- Número de pedido -->
-        <td class="align-middle text-center">{{ pedido.id_pedido }}</td>
+        <td class="text-center fw-bold">{{ pedido.id_pedido }}</td>
 
         <!-- Detalle del cliente -->
-        <td class="align-middle">
-          <strong>{{ pedido.cliente?.nombre }} {{ pedido.cliente?.apellido }}</strong><br>
-          DNI: {{ pedido.cliente?.dni }}<br>
-          {{ pedido.cliente?.telefono }}<br>
-          {{ pedido.cliente?.email }}
+        <td>
+          <strong>{{ pedido.cliente?.nombre_cliente }}</strong><br>
+          DNI: {{ pedido.cliente?.dni_cliente }}<br>
+          Tel: {{ pedido.cliente?.telefono_cliente }}<br>
+          Dir: {{ pedido.cliente?.direccion_cliente }}
         </td>
 
         <!-- Detalle del pedido -->
         <td>
           <ul class="list-unstyled mb-0">
             <li *ngFor="let detalle of pedido.detalles">
-              🍗 <strong>{{ detalle.producto?.nombre }}</strong> — Cant: {{ detalle.cantidad }}  
+              🍽️ <strong>{{ detalle.producto?.nombre_producto }}</strong>
+              — Cant: {{ detalle.cantidad }}
               <span class="text-muted">(Subtotal: ${{ detalle.subtotal }})</span>
             </li>
           </ul>
         </td>
 
         <!-- Total -->
-        <td class="align-middle fw-bold text-success">
+        <td class="fw-bold text-success text-center">
           ${{ pedido.monto_total }}
         </td>
 
         <!-- Botones -->
-        <td class="align-middle text-center">
+        <td class="text-center">
           <button class="btn btn-success btn-sm me-2"
                   (click)="cambiarEstado(pedido.id_pedido, 2)">
-            Aceptar
+            ✅ Aceptar
           </button>
           <button class="btn btn-danger btn-sm"
                   (click)="cambiarEstado(pedido.id_pedido, 3)">
-            Rechazar
+            ❌ Rechazar
           </button>
         </td>
       </tr>
     </tbody>
   </table>
 
-  <div *ngIf="!cargando && !pedidos.length" class="text-center text-muted">
+  <!-- Sin pedidos -->
+  <div *ngIf="!cargando && !pedidos.length" class="text-center text-muted py-4">
     No hay pedidos pendientes por el momento.
   </div>
 </div>
