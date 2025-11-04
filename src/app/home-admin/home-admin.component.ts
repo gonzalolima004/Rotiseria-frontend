@@ -6,6 +6,7 @@ type ModoModal = 'crear' | 'editar';
 
 @Component({
   selector: 'app-home-admin',
+  standalone: true,
   templateUrl: './home-admin.component.html',
   styleUrls: ['./home-admin.component.css']
 })
