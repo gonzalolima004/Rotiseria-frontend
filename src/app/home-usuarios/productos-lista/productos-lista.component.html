@@ -1,30 +1,30 @@
 <div class="products-container-with-sidebar">
   <!-- Sidebar de categorías -->
-  <div class="categoria-carousel-sidebar">
-    <button class="arrow-btn-vertical" (click)="scrollUp()" title="Scroll arriba">
-      <i class="bi bi-arrow-up"></i>
-    </button>
+  <div class="categoria-carousel">
+  <button class="arrow-btn" (click)="scrollLeft()" title="Scroll izquierda">
+    <i class="bi bi-arrow-left"></i>
+  </button>
 
-    <div class="categoria-container-vertical" #carousel>
-      <div
-        class="categoria-item"
-        *ngFor="let cat of categorias"
-        (click)="scrollToCategoria(cat.id_categoria)"
-        title="{{ cat.nombre_categoria }}"
-      >
-        <img
-          [src]="cat.imagen_url || 'assets/default.jpg'"
-          alt="{{ cat.nombre_categoria }}"
-          class="categoria-img"
-        />
-        <p class="m-0">{{ cat.nombre_categoria }}</p>
-      </div>
+  <div class="categoria-container" #carousel>
+    <div
+      class="categoria-item"
+      *ngFor="let cat of categorias"
+      (click)="scrollToCategoria(cat.id_categoria)"
+      title="{{ cat.nombre_categoria }}"
+    >
+      <img
+        [src]="cat.imagen_url || 'assets/default.jpg'"
+        alt="{{ cat.nombre_categoria }}"
+        class="categoria-img"
+      />
+      <p class="m-0">{{ cat.nombre_categoria }}</p>
     </div>
-
-    <button class="arrow-btn-vertical" (click)="scrollDown()" title="Scroll abajo">
-      <i class="bi bi-arrow-down"></i>
-    </button>
   </div>
+
+  <button class="arrow-btn" (click)="scrollRight()" title="Scroll derecha">
+    <i class="bi bi-arrow-right"></i>
+  </button>
+</div>
 
   <!-- Contenido principal de productos -->
   <div class="products-main-content">
