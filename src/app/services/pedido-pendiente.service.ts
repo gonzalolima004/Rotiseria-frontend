@@ -10,11 +10,13 @@ export class PedidoService {
 
   constructor(private http: HttpClient) {}
 
+  // Obtener pedidos
   getPedidos(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
   }
 
-  actualizarEstado(id: number, estadoId: number): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}/estado`, { id_estado_pedido: estadoId });
+  // ✅ Actualizar pedido (cambia estado y envía mensaje desde el backend)
+  actualizarPedido(id: number, data: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, data);
   }
 }

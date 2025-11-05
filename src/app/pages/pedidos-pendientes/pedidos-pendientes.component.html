@@ -1,7 +1,13 @@
 <div class="container mt-4">
-  <h2 class="text-center mb-4">📦 Pedidos Pendientes</h2>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">📦 Pedidos Pendientes</h2>
 
-  <!-- Cargando -->
+    <!-- 🔹 Badge dinámico -->
+    <div class="badge bg-primary fs-6 p-2">
+      Pendientes: {{ cantidadPendientes() }}
+    </div>
+  </div>
+
   <div *ngIf="cargando" class="text-center py-4">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Cargando...</span>
@@ -9,7 +15,6 @@
     <p class="mt-2">Cargando pedidos...</p>
   </div>
 
-  <!-- Tabla de pedidos -->
   <table *ngIf="!cargando && pedidos.length" class="table table-striped table-bordered align-middle">
     <thead class="table-dark text-center">
       <tr>
@@ -22,10 +27,8 @@
     </thead>
     <tbody>
       <tr *ngFor="let pedido of pedidos">
-        <!-- Número de pedido -->
         <td class="text-center fw-bold">{{ pedido.id_pedido }}</td>
 
-        <!-- Detalle del cliente -->
         <td>
           <strong>{{ pedido.cliente?.nombre_cliente }}</strong><br>
           DNI: {{ pedido.cliente?.dni_cliente }}<br>
@@ -33,30 +36,25 @@
           Dir: {{ pedido.cliente?.direccion_cliente }}
         </td>
 
-        <!-- Detalle del pedido -->
         <td>
           <ul class="list-unstyled mb-0">
             <li *ngFor="let detalle of pedido.detalles">
-              🍽️ <strong>{{ detalle.producto?.nombre_producto }}</strong>
-              — Cant: {{ detalle.cantidad }}
+              🍕 <strong>{{ detalle.producto?.nombre_producto }}</strong> —
+              Cant: {{ detalle.cantidad }}
               <span class="text-muted">(Subtotal: ${{ detalle.subtotal }})</span>
             </li>
           </ul>
         </td>
 
-        <!-- Total -->
         <td class="fw-bold text-success text-center">
           ${{ pedido.monto_total }}
         </td>
 
-        <!-- Botones -->
         <td class="text-center">
-          <button class="btn btn-success btn-sm me-2"
-                  (click)="cambiarEstado(pedido.id_pedido, 2)">
-            ✅ Aceptar
+          <button class="btn btn-success btn-sm me-2" (click)="confirmarPedido(pedido)">
+            ✅ Aprobar
           </button>
-          <button class="btn btn-danger btn-sm"
-                  (click)="cambiarEstado(pedido.id_pedido, 3)">
+          <button class="btn btn-danger btn-sm" (click)="rechazarPedido(pedido)">
             ❌ Rechazar
           </button>
         </td>
@@ -64,7 +62,6 @@
     </tbody>
   </table>
 
-  <!-- Sin pedidos -->
   <div *ngIf="!cargando && !pedidos.length" class="text-center text-muted py-4">
     No hay pedidos pendientes por el momento.
   </div>
