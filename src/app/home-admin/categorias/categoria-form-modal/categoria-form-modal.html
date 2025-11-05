@@ -1,0 +1,21 @@
+<h2>{{ modoEdicion ? 'Editar Categoría' : 'Nueva Categoría' }}</h2>
+
+<form [formGroup]="categoriaForm" (ngSubmit)="onSubmit()">
+  <label>Nombre</label>
+  <input type="text" formControlName="nombre_categoria" class="form-control mb-2">
+
+  <label>Imagen</label>
+  <input type="file" class="form-control mb-2" (change)="onFileChange($event)" accept="image/*">
+
+  <div *ngIf="preview" class="text-center mb-2">
+    <img [src]="preview" width="120" class="img-thumbnail">
+  </div>
+
+  <button type="submit" class="btn btn-success w-100 mb-2" [disabled]="categoriaForm.invalid">
+    {{ modoEdicion ? 'Actualizar' : 'Crear' }}
+  </button>
+
+  <button type="button" class="btn btn-secondary w-100" (click)="cerrarModal()">
+    Cancelar
+  </button>
+</form>

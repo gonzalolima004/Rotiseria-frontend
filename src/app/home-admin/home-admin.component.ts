@@ -1,67 +1,102 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ProductosListaAdminComponent } from './productos-lista-admin/productos-lista-admin.component';
+import { CategoriaService } from '../services/categoria.service';
 import { Header } from '../header/header';
+import { CategoriaFormModal } from '../home-admin/categorias/categoria-form-modal/categoria-form-modal';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-home-admin',
   standalone: true,
-  imports: [CommonModule, ProductosListaAdminComponent, Header],
+  imports: [CommonModule, Header, CategoriaFormModal],
   templateUrl: './home-admin.component.html',
   styleUrls: ['./home-admin.component.css']
 })
-export class HomeAdminComponent {
-  carrito: any[] = [];
+
+export class HomeAdminComponent implements OnInit {
+  @ViewChild('carousel') carousel!: ElementRef;
+
+  categorias: any[] = [];
   mostrarModal = false;
-  total = 0;
+  modoEdicion = false;
+  categoriaId: number | null = null;
 
-  onAgregarProducto(producto: any) {
-    const existe = this.carrito.find(p => p.id_producto === producto.id_producto);
-    if (existe) {
-      existe.cantidad += 1;
-      existe.subtotal = existe.cantidad * existe.precio_producto;
-    } else {
-      this.carrito.push({
-        id_producto: producto.id_producto,
-        nombre_producto: producto.nombre_producto,
-        precio_producto: producto.precio_producto,
-        cantidad: 1,
-        subtotal: producto.precio_producto
-      });
-    }
-    this.calcularTotal();
+  constructor(private categoriaService: CategoriaService) { }
+
+  ngOnInit(): void {
+    this.cargarCategorias();
   }
 
-  onQuitarItem(item: any) {
-    this.carrito = this.carrito.filter(p => p.id_producto !== item.id_producto);
-    this.calcularTotal();
+  cargarCategorias() {
+    this.categoriaService.obtenerCategorias().subscribe(res => {
+      this.categorias = res;
+    });
   }
 
-  onCambiarCantidad(event: { id_producto: number; cantidad: number }) {
-    const item = this.carrito.find(p => p.id_producto === event.id_producto);
-    if (item) {
-      item.cantidad = event.cantidad;
-      item.subtotal = item.cantidad * item.precio_producto;
-      this.calcularTotal();
-    }
+  scrollLeft() {
+    const el = this.carousel?.nativeElement;
+    if (el) el.scrollLeft -= 150;
   }
 
-  onFinalizarPedido() {
-    if (this.carrito.length === 0) return;
+  scrollRight() {
+    const el = this.carousel?.nativeElement;
+    if (el) el.scrollLeft += 150;
+  }
+
+  abrirModalCrear() {
+    this.modoEdicion = false;
+    this.categoriaId = null;
     this.mostrarModal = true;
   }
 
-  onPedidoRealizado() {
-    this.carrito = [];
-    this.total = 0;
-    this.mostrarModal = false;
+  abrirModalEditar(cat: any) {
+    this.modoEdicion = true;
+    this.categoriaId = cat.id_categoria;
+    this.mostrarModal = true;
   }
 
-  onCerrarModal() {
+
+  cerrarModal(event: any) {
     this.mostrarModal = false;
+
+    if (event === 'ok') {
+      this.cargarCategorias();
+    }
+  }
+  eliminarCategoria(id: number) {
+    Swal.fire({
+      title: '¿Eliminar categoría?',
+      text: "Esta acción no se puede deshacer",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#7C662A',
+      confirmButtonText: 'Sí, eliminar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.categoriaService.eliminarCategoria(id).subscribe(() => {
+
+          Swal.fire({
+            icon: 'success',
+            title: 'Categoría eliminada',
+            showConfirmButton: false,
+            timer: 1500
+          });
+
+          this.cargarCategorias();
+        });
+      }
+    });
   }
 
-  private calcularTotal() {
-    this.total = this.carrito.reduce((acc, p) => acc + Number(p.subtotal), 0);
-  }
+  //cuando esten las rutas de pedidos y ventas, eliminarlo 
+  pendiente(seccion: 'pedidos'|'ventas'){
+  Swal.fire({
+    icon: 'info',
+    title: 'Ruta pendiente',
+    text: `La URL de "${seccion}" se definirá más adelante.`,
+    confirmButtonColor: '#FFCA2B'
+  });
+}
+
 }
