@@ -1,68 +1,91 @@
-<div class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 class="mb-0">📦 Pedidos Pendientes</h2>
 
-    <!-- 🔹 Badge dinámico -->
-    <div class="badge bg-primary fs-6 p-2">
-      Pendientes: {{ cantidadPendientes() }}
-    </div>
+
+<div class="contenedor-pedidos">
+  <div class="titulo-con-flechas">
+    <button class="flecha" (click)="obtenerPedidos()">&#x21bb;</button>
+    <h2>Pedidos Pendientes</h2>
+    <span class="contador-badge">
+      🧾 {{ cantidadPendientes() }} Pendientes
+    </span>
   </div>
 
-  <div *ngIf="cargando" class="text-center py-4">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Cargando...</span>
-    </div>
-    <p class="mt-2">Cargando pedidos...</p>
+  <div *ngIf="cargando" class="cargando">
+    <div class="spinner"></div>
+    <p>Cargando pedidos...</p>
   </div>
 
-  <table *ngIf="!cargando && pedidos.length" class="table table-striped table-bordered align-middle">
-    <thead class="table-dark text-center">
-      <tr>
-        <th>N° Pedido</th>
-        <th>Cliente</th>
-        <th>Detalle del Pedido</th>
-        <th>Total</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let pedido of pedidos">
-        <td class="text-center fw-bold">{{ pedido.id_pedido }}</td>
+  <div class="tabla-wrapper" *ngIf="!cargando && pedidos.length > 0">
+    <table class="tabla-pedidos">
+      <thead>
+        <tr>
+          <th>Número / Fecha</th>
+          <th>Cliente</th>
+          <th>Detalle del Pedido</th>
+          <th>Total</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pedido of pedidos" class="fila-pedido" [class.fila-eliminando]="pedido.id_pedido === eliminandoId">
+          <td>
+            <div class="numero-pedido">#{{ pedido.id_pedido }}</div>
+            <div class="fecha-pedido">
+              {{ pedido.fecha_hora | date: 'dd/MM/yyyy HH:mm' }}
+            </div>
+          </td>
 
-        <td>
-          <strong>{{ pedido.cliente?.nombre_cliente }}</strong><br>
-          DNI: {{ pedido.cliente?.dni_cliente }}<br>
-          Tel: {{ pedido.cliente?.telefono_cliente }}<br>
-          Dir: {{ pedido.cliente?.direccion_cliente }}
-        </td>
+          <td>
+            <div class="nombre-cliente">{{ pedido.cliente?.nombre_cliente }}</div>
+            <div class="info-cliente">📞 {{ pedido.cliente?.telefono_cliente }}</div>
+            <div class="info-cliente">📍 {{ pedido.cliente?.direccion_cliente }}</div>
+            <div class="info-cliente">🪪 DNI: {{ pedido.cliente?.dni_cliente }}</div>
+          </td>
 
-        <td>
-          <ul class="list-unstyled mb-0">
-            <li *ngFor="let detalle of pedido.detalles">
-              🍕 <strong>{{ detalle.producto?.nombre_producto }}</strong> —
-              Cant: {{ detalle.cantidad }}
-              <span class="text-muted">(Subtotal: ${{ detalle.subtotal }})</span>
-            </li>
-          </ul>
-        </td>
+          <td>
+            <div *ngIf="pedido.detalles?.length > 0; else sinDetalles">
+              <div *ngFor="let det of pedido.detalles" class="detalle-item">
+                <div class="detalle-linea">
+                  <span class="detalle-label">🍕 Producto:</span>
+                  <span class="detalle-valor">{{ det.producto?.nombre_producto }}</span>
+                </div>
+                <div class="detalle-linea">
+                  <span class="detalle-label">Cantidad:</span>
+                  <span class="detalle-valor">{{ det.cantidad }}</span>
+                </div>
+                <div class="detalle-linea">
+                  <span class="detalle-label">Subtotal:</span>
+                  <span class="detalle-precio">
+                    {{ det.subtotal | currency:'ARS':'symbol-narrow' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <ng-template #sinDetalles>
+              <div class="sin-datos-detalle">Sin detalles</div>
+            </ng-template>
+          </td>
 
-        <td class="fw-bold text-success text-center">
-          ${{ pedido.monto_total }}
-        </td>
+          <td>
+            <div class="total">
+              {{ pedido.monto_total | currency:'ARS':'symbol-narrow' }}
+            </div>
+          </td>
 
-        <td class="text-center">
-          <button class="btn btn-success btn-sm me-2" (click)="confirmarPedido(pedido)">
-            ✅ Aprobar
-          </button>
-          <button class="btn btn-danger btn-sm" (click)="rechazarPedido(pedido)">
-            ❌ Rechazar
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+          <td class="acciones">
+            <button class="btn-aprobar" (click)="confirmarPedido(pedido)">
+              ✅ Aprobar
+            </button>
+            <button class="btn-rechazar" (click)="rechazarPedido(pedido)">
+              ❌ Rechazar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-  <div *ngIf="!cargando && !pedidos.length" class="text-center text-muted py-4">
-    No hay pedidos pendientes por el momento.
+  <div *ngIf="!cargando && pedidos.length === 0" class="sin-datos">
+    <div class="sin-datos-icono">📦</div>
+    <p>No hay pedidos pendientes por el momento.</p>
   </div>
 </div>

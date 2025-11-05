@@ -13,7 +13,8 @@ import Swal from 'sweetalert2';
 export class PedidosPendientesComponent implements OnInit {
   pedidos: any[] = [];
   cargando = true;
-  cantidadPendientes = signal<number>(0); // ✅ nuevo contador reactivo
+  cantidadPendientes = signal<number>(0);
+  eliminandoId: number | null = null; // 👈 nuevo
   isBrowser = false;
 
   constructor(
@@ -23,22 +24,13 @@ export class PedidosPendientesComponent implements OnInit {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
-ngOnInit(): void {
-  if (isPlatformBrowser(this.platformId)) {
-    const token = localStorage.getItem('token');
-    if (token) {
-      this.obtenerPedidos();
-    } else {
-      console.warn('Esperando token JWT antes de cargar pedidos...');
-      
+  ngOnInit(): void {
+    if (this.isBrowser) {
+      const token = localStorage.getItem('token');
+      if (token) this.obtenerPedidos();
     }
-  } else {
-    console.warn('SSR activo: no hay localStorage disponible');
   }
-}
 
-
-  // 🔹 Cargar pedidos pendientes
   obtenerPedidos(): void {
     this.cargando = true;
     this.pedidoService.getPedidos().subscribe({
@@ -46,7 +38,6 @@ ngOnInit(): void {
         const pendientes = data.filter(
           (p) => p.estado?.nombre_estado_pedido === 'Pendiente'
         );
-        // ✅ Clonamos el array para forzar detección de cambios
         this.pedidos = [...pendientes];
         this.cantidadPendientes.set(this.pedidos.length);
         this.cargando = false;
@@ -58,7 +49,7 @@ ngOnInit(): void {
     });
   }
 
-  // ✅ Confirmar pedido (envía mensaje WhatsApp + refresca lista)
+  // ✅ Confirmar pedido con animación
   confirmarPedido(pedido: any) {
     Swal.fire({
       title: `Confirmar pedido N°${pedido.id_pedido}`,
@@ -92,13 +83,19 @@ ngOnInit(): void {
                 icon: 'success',
                 title: '✅ Pedido confirmado',
                 text: 'El cliente ha sido notificado por WhatsApp.',
-                timer: 2000,
+                timer: 1500,
                 showConfirmButton: false,
               });
 
-              // 🔹 Eliminar inmediatamente el pedido confirmado del array
-              this.pedidos = this.pedidos.filter(p => p.id_pedido !== pedido.id_pedido);
-              this.cantidadPendientes.set(this.pedidos.length);
+              // 👇 Activar animación
+              this.eliminandoId = pedido.id_pedido;
+
+              // Esperar animación y eliminar de la lista
+              setTimeout(() => {
+                this.pedidos = this.pedidos.filter(p => p.id_pedido !== pedido.id_pedido);
+                this.cantidadPendientes.set(this.pedidos.length);
+                this.eliminandoId = null;
+              }, 500); // coincide con la duración CSS
             },
             error: (err) => {
               console.error('❌ Error al confirmar pedido', err);
@@ -109,7 +106,7 @@ ngOnInit(): void {
     });
   }
 
-  // ❌ Rechazar pedido (refresca automáticamente)
+  // ❌ Rechazar pedido con animación
   rechazarPedido(pedido: any) {
     Swal.fire({
       title: `Rechazar pedido N°${pedido.id_pedido}`,
@@ -128,13 +125,17 @@ ngOnInit(): void {
                 icon: 'info',
                 title: '🚫 Pedido rechazado',
                 text: 'El pedido fue marcado como rechazado.',
-                timer: 2000,
+                timer: 1500,
                 showConfirmButton: false,
               });
 
-              // 🔹 Eliminar inmediatamente el pedido rechazado del array
-              this.pedidos = this.pedidos.filter(p => p.id_pedido !== pedido.id_pedido);
-              this.cantidadPendientes.set(this.pedidos.length);
+              this.eliminandoId = pedido.id_pedido;
+
+              setTimeout(() => {
+                this.pedidos = this.pedidos.filter(p => p.id_pedido !== pedido.id_pedido);
+                this.cantidadPendientes.set(this.pedidos.length);
+                this.eliminandoId = null;
+              }, 500);
             },
             error: (err) => {
               console.error('❌ Error al rechazar pedido', err);
