@@ -6,23 +6,23 @@
   width: 100%;
 }
 
-/* Carrusel fijo en la parte superior */
 .categoria-carousel {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
   gap: 12px;
   padding: 15px 0;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   border-radius: 12px;
-  position: sticky;      /* 👈 mantiene el carrusel visible */
-  top: 0;                /* 👈 se “pega” al borde superior de la ventana */
-  z-index: 1000;         /* 👈 evita que quede debajo de los productos */
-  backdrop-filter: blur(6px); /* 👌 efecto moderno al hacer scroll */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(6px);
   border-bottom: 2px solid rgba(255, 202, 43, 0.3);
+  max-width: 700px;      
+  margin-left: 40px; 
 }
 
-/* Evita que se recorte el scroll */
 .categoria-container {
   overflow-x: auto;
   overflow-y: hidden;
@@ -31,10 +31,9 @@
   gap: 16px;
   scroll-behavior: smooth;
   padding: 12px 0;
-  width: 80%;
+  width: 100%;
+  margin-left: 20px;        
 }
-
-
 
 .categoria-container::-webkit-scrollbar {
   height: 6px;
@@ -84,8 +83,6 @@
   letter-spacing: 0.3px;
   line-height: 1.2;
 }
-
-/* Flechas */
 .arrow-btn {
   background: #fff;
   border: 2px solid #dee2e6;
@@ -113,7 +110,69 @@
   transform: scale(0.95);
 }
 
-/* Productos */
+.acciones-categoria {
+  display: flex;
+  gap: 8px;
+  margin-top: 5px;
+  color: #7C662A;
+  font-size: 18px;
+  justify-content: center;
+}
+
+.acciones-categoria i {
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.acciones-categoria i:hover {
+  transform: scale(1.2);
+}
+
+.agregar-nueva {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.plus-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 3px dashed #FFCA2B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFCA2B;
+  font-size: 30px;
+}
+
+/* ------------ MODAL ------------ */
+.modal-overlay {
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background: rgba(0,0,0,0.4);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:99999;
+}
+
+.modal-container {
+  background:white;
+  border-radius:15px;
+  padding:25px;
+  width:450px;
+  max-width:90%;
+  animation: fadeIn .2s ease;
+}
+
+@keyframes fadeIn {
+  from{ opacity:0; transform:scale(.9) }
+  to{ opacity:1; transform:scale(1) }
+}
+
 .products-main-content {
   flex: 1;
   min-width: 0;
@@ -154,7 +213,6 @@
   color: #FFCA2B;
 }
 
-/* Botón agregar */
 .btn-add {
   background: #FFCA2B;
   border: none;
