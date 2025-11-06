@@ -1,3 +1,17 @@
 <app-header></app-header>
 
-<p>home-admin works!</p>
+<div class="container-fluid py-4 d-flex justify-content-center">
+  <div class="row w-100" style="max-width: 1200px">
+    <div class="col-lg-8 mb-3">
+      <app-productos-lista-admin></app-productos-lista-admin>
+    </div>
+  </div>
+</div>
+
+<!-- botones de ver historial de ventas y pedidos entrantes, hay que modificarlo cuando esten las rutas listas -->
+<div class="acciones-admin-extra">
+  <button type="button" class="admin-box" (click)="pendiente('pedidos')">
+    Sección de pedidos entrantes e historial
+  </button>
+  <button type="button" class="admin-box" (click)="pendiente('ventas')">Historial de ventas</button>
+</div>

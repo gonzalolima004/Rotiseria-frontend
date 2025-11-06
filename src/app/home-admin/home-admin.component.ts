@@ -1,14 +1,10 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Header } from '../header/header';
+import { ProductosListaAdminComponent } from './productos-lista-admin/productos-lista-admin.component';
 
 @Component({
   selector: 'app-home-admin',
   standalone: true,
-  imports: [CommonModule, Header],
-  templateUrl: './home-admin.html',
-  styleUrl: './home-admin.css'
+  imports: [ProductosListaAdminComponent],
+  template: `<app-productos-lista-admin></app-productos-lista-admin>`
 })
-export class HomeAdmin {
-
-}
+export class HomeAdminComponent {}
