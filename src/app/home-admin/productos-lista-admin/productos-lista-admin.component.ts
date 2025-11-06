@@ -18,12 +18,11 @@ export class ProductosListaAdminComponent implements OnInit {
   categorias: any[] = [];
   productos: any[] = [];
 
-  //PARA MODAL
   mostrarModal = false;
   modoEdicion = false;
   categoriaId: number | null = null;
 
-  @ViewChild('carousel') carousel!: ElementRef;
+  @ViewChild('carousel', { static: false }) carousel!: ElementRef;
 
   constructor(private productoService: ProductoService, private categoriaService: CategoriaService) {}
 
@@ -33,19 +32,11 @@ export class ProductosListaAdminComponent implements OnInit {
   }
 
   cargarCategorias() {
-    this.categoriaService.obtenerCategorias().subscribe((res) => {
+    this.categoriaService.obtenerCategorias().subscribe(res => {
       this.categorias = res;
     });
   }
 
-  cargarProductos() {
-    this.productoService.obtenerProductos().subscribe({
-      next: (data) => (this.productos = data.filter(p => p.disponible === 1)),
-      error: (err) => console.error('Error al cargar productos', err)
-    });
-  }
-
-  // MODAL
   abrirModalCrear() {
     this.modoEdicion = false;
     this.categoriaId = null;
@@ -60,6 +51,7 @@ export class ProductosListaAdminComponent implements OnInit {
 
   cerrarModal(event: any) {
     this.mostrarModal = false;
+
     if (event === 'ok') {
       this.cargarCategorias();
     }
@@ -91,15 +83,21 @@ export class ProductosListaAdminComponent implements OnInit {
     });
   }
 
-  //CARRUSEL
   scrollLeft() {
-    const el = this.carousel?.nativeElement;
-    if (el) el.scrollLeft -= 150;
+    const carousel = this.carousel?.nativeElement;
+    if (carousel) carousel.scrollLeft -= 150;
   }
 
   scrollRight() {
-    const el = this.carousel?.nativeElement;
-    if (el) el.scrollLeft += 150;
+    const carousel = this.carousel?.nativeElement;
+    if (carousel) carousel.scrollLeft += 150;
+  }
+
+  cargarProductos() {
+    this.productoService.obtenerProductos().subscribe({
+      next: (data) => (this.productos = data.filter(p => p.disponible === 1)),
+      error: (err) => console.error('Error al cargar productos', err)
+    });
   }
 
   filtrarProductosPorCategoria(id_categoria: number) {
@@ -110,14 +108,11 @@ export class ProductosListaAdminComponent implements OnInit {
     this.agregar.emit(producto);
   }
 
-  //BOTONES ABAJO PENDIENTE
-  pendiente(seccion: 'pedidos'|'ventas'){
-    Swal.fire({
-      icon: 'info',
-      title: 'Ruta pendiente',
-      text: `La URL de "${seccion}" se definirá más adelante.`,
-      confirmButtonColor: '#FFCA2B'
-    });
+  scrollToCategoria(id: number) {
+    const element = document.getElementById('cat-' + id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
 }
