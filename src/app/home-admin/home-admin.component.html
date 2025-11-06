@@ -1,25 +1,20 @@
 <app-header></app-header>
 
 <div class="container-fluid py-4 d-flex justify-content-center">
-  <div class="row w-100" style="max-width: 1200px">
-
-    <!-- COLUMNA PRINCIPAL (carrusel + productos) -->
+  <div class="row w-100" style="max-width: 1400px; align-items: flex-start">
+    <!-- izquierda → categorías + productos -->
     <div class="col-lg-9 mb-3">
       <app-productos-lista-admin></app-productos-lista-admin>
     </div>
 
-    <!-- COLUMNA DERECHA (botones admin) -->
-    <div class="col-lg-3 d-flex flex-column align-items-end justify-content-start">
-      
-      <button type="button" class="admin-box mb-3 w-100" (click)="pendiente('pedidos')">
+    <div class="col-lg-3 d-flex flex-column align-items-end gap-2 botones-admin-column">
+      <button class="admin-box" type="button" (click)="pendiente('pedidos')">
         Sección de pedidos entrantes e historial
       </button>
 
-      <button type="button" class="admin-box w-100" (click)="pendiente('ventas')">
+      <button class="admin-box" type="button" (click)="pendiente('ventas')">
         Historial de ventas
       </button>
-
     </div>
-
   </div>
 </div>
