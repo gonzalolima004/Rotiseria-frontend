@@ -38,22 +38,22 @@
             <div class="nombre-cliente">{{ pedido.cliente?.nombre_cliente }}</div>
             <div class="info-cliente">📞 {{ pedido.cliente?.telefono_cliente }}</div>
             <div class="info-cliente">📍 {{ pedido.cliente?.direccion_cliente }}</div>
-            <div class="info-cliente">🪪 DNI: {{ pedido.cliente?.dni_cliente }}</div>
+            <div class="info-cliente">📃 DNI: {{ pedido.cliente?.dni_cliente }}</div>
           </td>
 
           <td>
             <div *ngIf="pedido.detalles?.length > 0; else sinDetalles">
               <div *ngFor="let det of pedido.detalles" class="detalle-item">
                 <div class="detalle-linea">
-                  <span class="detalle-label">🍕 Producto:</span>
+                  <span class="detalle-label">🍽️ Producto:</span>
                   <span class="detalle-valor">{{ det.producto?.nombre_producto }}</span>
                 </div>
                 <div class="detalle-linea">
-                  <span class="detalle-label">Cantidad:</span>
+                  <span class="detalle-label">➕ Cantidad:</span>
                   <span class="detalle-valor">{{ det.cantidad }}</span>
                 </div>
                 <div class="detalle-linea">
-                  <span class="detalle-label">Subtotal:</span>
+                  <span class="detalle-label">💸 Subtotal:</span>
                   <span class="detalle-precio">
                     {{ det.subtotal | currency:'ARS':'symbol-narrow' }}
                   </span>
@@ -67,9 +67,13 @@
 
           <td>
             <div class="total">
-              {{ pedido.monto_total | currency:'ARS':'symbol-narrow' }}
+              <span class="total-titulo">💰 Total:</span><br />
+              <span class="total-valor">
+                {{ pedido.monto_total | currency:'ARS':'symbol-narrow' }}
+              </span>
             </div>
           </td>
+
 
           <td class="acciones">
             <button class="btn-aprobar" (click)="confirmarPedido(pedido)">

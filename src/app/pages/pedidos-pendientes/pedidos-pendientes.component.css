@@ -6,8 +6,6 @@
 
 .contenedor-pedidos {
   background-color: #fffeba;
-  border: 2px solid #7c662a;
-  border-radius: 10px;
   padding: 20px;
   color: #7c662a;
   font-family: "Arial", sans-serif;
@@ -297,4 +295,21 @@ h2 {
     color: #7c662a;
     margin-bottom: 5px;
   }
+}
+.total {
+  text-align: center;
+  font-weight: bold;
+}
+
+.total-titulo {
+  display: block;
+  color: #444;
+  font-size: 0.95rem;
+}
+
+.total-valor {
+  display: block;
+  color: #000;
+  font-size: 1.1rem;
+  margin-top: 4px;
 }
