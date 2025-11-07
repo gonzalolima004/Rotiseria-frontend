@@ -106,43 +106,44 @@ export class PedidosPendientesComponent implements OnInit {
     });
   }
 
-  // ❌ Rechazar pedido con animación
-  rechazarPedido(pedido: any) {
-    Swal.fire({
-      title: `Rechazar pedido N°${pedido.id_pedido}`,
-      text: '¿Estás seguro de rechazar este pedido?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, rechazar',
-      cancelButtonText: 'Cancelar',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.pedidoService
-          .actualizarPedido(pedido.id_pedido, { id_estado_pedido: 3 })
-          .subscribe({
-            next: () => {
-              Swal.fire({
-                icon: 'info',
-                title: '🚫 Pedido rechazado',
-                text: 'El pedido fue marcado como rechazado.',
-                timer: 1500,
-                showConfirmButton: false,
-              });
-
-              this.eliminandoId = pedido.id_pedido;
-
-              setTimeout(() => {
-                this.pedidos = this.pedidos.filter(p => p.id_pedido !== pedido.id_pedido);
-                this.cantidadPendientes.set(this.pedidos.length);
-                this.eliminandoId = null;
-              }, 500);
-            },
-            error: (err) => {
-              console.error('❌ Error al rechazar pedido', err);
-              Swal.fire('Error', 'No se pudo rechazar el pedido.', 'error');
-            },
+  // ❌ Rechazar pedido con animación y eliminación real
+rechazarPedido(pedido: any) {
+  Swal.fire({
+    title: `Rechazar pedido N°${pedido.id_pedido}`,
+    text: '¿Estás seguro de que deseas eliminar este pedido?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.pedidoService.eliminarPedido(pedido.id_pedido).subscribe({
+        next: () => {
+          Swal.fire({
+            icon: 'info',
+            title: '🚫 Pedido eliminado',
+            text: 'El pedido fue eliminado correctamente.',
+            timer: 1500,
+            showConfirmButton: false,
           });
-      }
-    });
-  }
+
+          // 🟡 Activar animación de salida
+          this.eliminandoId = pedido.id_pedido;
+
+          // 🔄 Quitar de la lista después de la animación
+          setTimeout(() => {
+            this.pedidos = this.pedidos.filter(p => p.id_pedido !== pedido.id_pedido);
+            this.cantidadPendientes.set(this.pedidos.length);
+            this.eliminandoId = null;
+          }, 500);
+        },
+        error: (err) => {
+          console.error('❌ Error al eliminar pedido', err);
+          Swal.fire('Error', 'No se pudo eliminar el pedido.', 'error');
+        },
+      });
+    }
+  });
+}
+
 }
