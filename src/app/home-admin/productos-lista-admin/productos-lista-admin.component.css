@@ -15,10 +15,10 @@
   padding: 15px 0;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   border-radius: 12px;
-  position: sticky;      /* 👈 mantiene el carrusel visible */
-  top: 0;                /* 👈 se “pega” al borde superior de la ventana */
-  z-index: 1000;         /* 👈 evita que quede debajo de los productos */
-  backdrop-filter: blur(6px); /* 👌 efecto moderno al hacer scroll */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(6px);
   border-bottom: 2px solid rgba(255, 202, 43, 0.3);
 }
 
@@ -34,8 +34,6 @@
   width: 80%;
 }
 
-
-
 .categoria-container::-webkit-scrollbar {
   height: 6px;
 }
@@ -49,7 +47,6 @@
   background: #FFCA2B;
   border-radius: 10px;
 }
-
 
 .categoria-item {
   flex: 0 0 auto;
@@ -172,11 +169,6 @@
 .btn-agregar-producto:active {
   transform: scale(0.95);
 }
-{
-
-  margin-bottom: 28px;
-}
-
 
 .product-card {
   border: 1px solid #dee2e6;
@@ -184,12 +176,10 @@
   overflow: hidden;
 }
 
-
 .product-card:hover {
   transform: translateY(-5px);
   border-color: #FFCA2B;
 }
-
 
 .product-card .card-img-top {
   height: 200px;
@@ -200,25 +190,23 @@
   font-size: 1.25rem;
   font-weight: 700;
   color: #FFCA2B;
+}
 
-/* Botones de editar y eliminar */
-.btn-editar {
-
-/* Botón agregar */
+/* Botones de editar, eliminar y agregar */
+.btn-editar,
 .btn-add {
-
   background: #FFCA2B;
   border: none;
   color: white;
   font-weight: 600;
-
   padding: 10px 12px;
   transition: all 0.3s ease;
   border-radius: 6px;
   font-size: 0.9rem;
 }
 
-.btn-editar:hover {
+.btn-editar:hover,
+.btn-add:hover {
   background: #e9b525;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(255, 202, 43, 0.3);
@@ -244,17 +232,9 @@
 }
 
 .btn-editar:active,
-.btn-eliminar:active {
+.btn-eliminar:active,
+.btn-add:active {
   transform: translateY(0);
-  padding: 10px 16px;
-  border-radius: 6px;
-  transition: 0.3s;
-}
-
-.btn-add:hover {
-  background: #caa021;
-  box-shadow: 0 8px 16px rgba(163, 123, 57, 0.3);
-
 }
 
 /* Modal overlay - PERFECTAMENTE CENTRADO */
@@ -330,7 +310,6 @@
     font-size: 1.25rem;
   }
 
-
   .btn-agregar-producto {
     width: 40px;
     height: 40px;
@@ -340,9 +319,6 @@
   .product-card .card-img-top {
     height: 160px;
   }
-
-}
-
 
   .categoria-item p {
     font-size: 0.75rem;
@@ -438,12 +414,6 @@
   transform: scale(0.95);
 }
 
-/* Contenedor principal de productos */
-.products-main-content {
-  flex: 1;
-  min-width: 0;
-}
-
 /* Responsive */
 @media (max-width: 992px) {
   .products-container-with-sidebar {
@@ -503,4 +473,3 @@
     gap: 12px;
   }
 }
-
