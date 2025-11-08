@@ -128,24 +128,8 @@ scrollRight() {
   }
 
 
-  scrollUp() {
-    const carousel = document.querySelector('.categoria-container-vertical');
-    if (carousel) {
-      carousel.scrollBy({
-        top: -100,
-        behavior: 'smooth'
-      });
-    }
-  }
 
-  scrollDown() {
-    const carousel = document.querySelector('.categoria-container-vertical');
-    if (carousel) {
-      carousel.scrollBy({
-        top: 100,
-        behavior: 'smooth'
-      });
-    }
-  }
 }
+  
+
 

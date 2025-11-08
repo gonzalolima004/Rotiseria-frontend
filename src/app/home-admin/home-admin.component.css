@@ -13,7 +13,7 @@
   opacity: 0;
 }
 
-/* Botón de cerrar sesión */
+/* 👇 SOLO AGREGUÉ ESTO */
 .logout-container {
   display: flex;
   justify-content: flex-end;

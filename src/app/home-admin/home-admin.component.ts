@@ -48,6 +48,7 @@ export class HomeAdminComponent {
     this.lista?.cargarProductos();
   }
 
+  // 👇 SOLO AGREGUÉ ESTE MÉTODO
   cerrarSesion() {
     Swal.fire({
       title: '¿Cerrar sesión?',
