@@ -1,3 +1,4 @@
+
 <div class="products-container-with-sidebar">
   <!-- Sidebar de categorías -->
   <div class="categoria-carousel-sidebar">
@@ -22,7 +23,35 @@
     <button class="arrow-btn-vertical" (click)="scrollDown()" title="Scroll abajo">
       <i class="bi bi-arrow-down"></i>
     </button>
+
+<div class="products-container-with-carousel">
+  <!-- Carrusel horizontal de categorías -->
+  <div class="categoria-carousel">
+  <button class="arrow-btn" (click)="scrollLeft()" title="Scroll izquierda">
+    <i class="bi bi-arrow-left"></i>
+  </button>
+
+  <div class="categoria-container" #carousel>
+    <div
+      class="categoria-item"
+      *ngFor="let cat of categorias"
+      (click)="scrollToCategoria(cat.id_categoria)"
+      title="{{ cat.nombre_categoria }}"
+    >
+      <img
+        [src]="cat.imagen_url || 'assets/default.jpg'"
+        alt="{{ cat.nombre_categoria }}"
+        class="categoria-img"
+      />
+      <p class="m-0">{{ cat.nombre_categoria }}</p>
+    </div>
   </div>
+
+  <button class="arrow-btn" (click)="scrollRight()" title="Scroll derecha">
+    <i class="bi bi-arrow-right"></i>
+  </button>
+</div>
+
 
   <!-- Contenido principal de productos -->
   <div class="products-main-content">
@@ -88,6 +117,7 @@
   </div>
 </div>
 
+
 <!-- Modal para crear/editar producto -->
 <div class="modal-overlay" *ngIf="mostrarModal" (click)="cerrarModal('cancel')">
   <div class="modal-content" (click)="$event.stopPropagation()">
@@ -98,3 +128,4 @@
     ></app-producto-form-modal>
   </div>
 </div>
+

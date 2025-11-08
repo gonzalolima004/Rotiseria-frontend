@@ -110,12 +110,15 @@ export class ProductosListaAdminComponent implements OnInit {
   }
 
   scrollLeft() {
-    this.carousel.nativeElement.scrollBy({ left: -200, behavior: 'smooth' });
-  }
+  const carousel = document.querySelector('.categoria-container') as HTMLElement;
+  carousel.scrollBy({ left: -200, behavior: 'smooth' });
+}
 
-  scrollRight() {
-    this.carousel.nativeElement.scrollBy({ left: 200, behavior: 'smooth' });
-  }
+scrollRight() {
+  const carousel = document.querySelector('.categoria-container') as HTMLElement;
+  carousel.scrollBy({ left: 200, behavior: 'smooth' });
+}
+
 
   scrollToCategoria(id: number) {
     const element = document.getElementById('cat-' + id);
@@ -123,6 +126,7 @@ export class ProductosListaAdminComponent implements OnInit {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
+
 
   scrollUp() {
     const carousel = document.querySelector('.categoria-container-vertical');
@@ -144,3 +148,4 @@ export class ProductosListaAdminComponent implements OnInit {
     }
   }
 }
+
