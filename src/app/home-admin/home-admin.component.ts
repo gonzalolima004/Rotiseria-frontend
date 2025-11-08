@@ -1,67 +1,75 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { ProductosListaAdminComponent } from './productos-lista-admin/productos-lista-admin.component';
+import { ProductoFormModal } from './producto-form-modal/producto-form-modal.component';
 import { Header } from '../header/header';
+import { AuthService } from '../services/auth';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-home-admin',
   standalone: true,
-  imports: [CommonModule, ProductosListaAdminComponent, Header],
+  imports: [CommonModule, ProductosListaAdminComponent, ProductoFormModal, Header],
   templateUrl: './home-admin.component.html',
   styleUrls: ['./home-admin.component.css']
 })
 export class HomeAdminComponent {
-  carrito: any[] = [];
-  mostrarModal = false;
-  total = 0;
+  modalVisible = false;
+  modalMode: 'create' | 'edit' = 'create';
+  productoSeleccionado: any = null;
 
-  onAgregarProducto(producto: any) {
-    const existe = this.carrito.find(p => p.id_producto === producto.id_producto);
-    if (existe) {
-      existe.cantidad += 1;
-      existe.subtotal = existe.cantidad * existe.precio_producto;
-    } else {
-      this.carrito.push({
-        id_producto: producto.id_producto,
-        nombre_producto: producto.nombre_producto,
-        precio_producto: producto.precio_producto,
-        cantidad: 1,
-        subtotal: producto.precio_producto
-      });
-    }
-    this.calcularTotal();
+  @ViewChild(ProductosListaAdminComponent)
+  lista!: ProductosListaAdminComponent;
+
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
+
+  abrirCrearProducto() {
+    this.modalMode = 'create';
+    this.productoSeleccionado = null;
+    this.modalVisible = true;
   }
 
-  onQuitarItem(item: any) {
-    this.carrito = this.carrito.filter(p => p.id_producto !== item.id_producto);
-    this.calcularTotal();
+  abrirEditarProducto(prod: any) {
+    this.modalMode = 'edit';
+    this.productoSeleccionado = prod;
+    this.modalVisible = true;
   }
 
-  onCambiarCantidad(event: { id_producto: number; cantidad: number }) {
-    const item = this.carrito.find(p => p.id_producto === event.id_producto);
-    if (item) {
-      item.cantidad = event.cantidad;
-      item.subtotal = item.cantidad * item.precio_producto;
-      this.calcularTotal();
-    }
+  cerrarModal() {
+    this.modalVisible = false;
+    this.refrescarLista();
   }
 
-  onFinalizarPedido() {
-    if (this.carrito.length === 0) return;
-    this.mostrarModal = true;
+  refrescarLista() {
+    this.lista?.cargarProductos();
   }
 
-  onPedidoRealizado() {
-    this.carrito = [];
-    this.total = 0;
-    this.mostrarModal = false;
-  }
-
-  onCerrarModal() {
-    this.mostrarModal = false;
-  }
-
-  private calcularTotal() {
-    this.total = this.carrito.reduce((acc, p) => acc + Number(p.subtotal), 0);
+  cerrarSesion() {
+    Swal.fire({
+      title: '¿Cerrar sesión?',
+      text: '¿Estás seguro de que deseas salir?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#7C662A',
+      cancelButtonColor: '#FFCA2B',
+      confirmButtonText: 'Sí, cerrar sesión',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.authService.logout();
+        this.router.navigate(['/home-usuarios']);
+        Swal.fire({
+          icon: 'success',
+          title: 'Sesión cerrada',
+          text: '¡Hasta pronto!',
+          showConfirmButton: false,
+          timer: 1500
+        });
+      }
+    });
   }
 }

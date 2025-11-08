@@ -12,3 +12,37 @@
   transform: translateY(100px);
   opacity: 0;
 }
+
+/* Botón de cerrar sesión */
+.logout-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 15px 30px;
+  background: #FFFEBA;
+  border-bottom: 2px solid #FFCA2B;
+}
+
+.btn-logout {
+  background: #7C662A;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-logout:hover {
+  background: #5c4d21;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(124, 102, 42, 0.3);
+}
+
+.btn-logout i {
+  font-size: 1.1rem;
+}

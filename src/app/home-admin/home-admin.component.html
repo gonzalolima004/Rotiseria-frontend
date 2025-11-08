@@ -1,9 +1,27 @@
 <app-header></app-header>
 
+<!-- Botón de cerrar sesión -->
+<div class="logout-container">
+  <button class="btn-logout" (click)="cerrarSesion()" title="Cerrar sesión">
+    <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+  </button>
+</div>
+
 <div class="container-fluid py-4 d-flex justify-content-center">
   <div class="row w-100" style="max-width: 1200px;">
     <div class="col-lg-8 mb-3">
-      <app-productos-lista-admin></app-productos-lista-admin>
+      <app-productos-lista-admin
+        (crearProducto)="abrirCrearProducto()"
+        (editarProducto)="abrirEditarProducto($event)">
+      </app-productos-lista-admin>
     </div>
   </div>
 </div>
+
+<!-- Modal de crear/editar producto -->
+<app-producto-form-modal
+  *ngIf="modalVisible"
+  [modoEdicion]="modalMode === 'edit'"
+  [productoId]="productoSeleccionado?.id_producto"
+  (cerrar)="cerrarModal()">
+</app-producto-form-modal>

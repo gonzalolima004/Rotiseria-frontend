@@ -1,21 +1,26 @@
 import { Component, EventEmitter, OnInit, Output, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductoService } from '../../services/producto.service';
+import { ProductoFormModal } from '../producto-form-modal/producto-form-modal.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-productos-lista-admin',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ProductoFormModal],
   templateUrl: './productos-lista-admin.component.html',
   styleUrls: ['./productos-lista-admin.component.css']
 })
 export class ProductosListaAdminComponent implements OnInit {
   @Output() agregar = new EventEmitter<any>();
-
   categorias: any[] = [];
   productos: any[] = [];
-
   @ViewChild('carousel', { static: false }) carousel!: ElementRef;
+
+  // Variables para el modal
+  mostrarModal = false;
+  modoEdicion = false;
+  productoIdSeleccionado: number | null = null;
 
   constructor(private productoService: ProductoService) {}
 
@@ -44,6 +49,64 @@ export class ProductosListaAdminComponent implements OnInit {
 
   agregarProducto(producto: any) {
     this.agregar.emit(producto);
+  }
+
+  // Abrir modal para crear producto
+  abrirModalCrear() {
+    this.modoEdicion = false;
+    this.productoIdSeleccionado = null;
+    this.mostrarModal = true;
+  }
+
+  // Abrir modal para editar producto
+  editarProducto(producto: any) {
+    this.modoEdicion = true;
+    this.productoIdSeleccionado = producto.id_producto;
+    this.mostrarModal = true;
+  }
+
+  // Eliminar producto
+  eliminarProducto(producto: any) {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: `Se eliminará el producto "${producto.nombre_producto}"`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#FFCA2B',
+      cancelButtonColor: '#7C662A',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.productoService.eliminarProducto(producto.id_producto).subscribe({
+          next: () => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Producto eliminado',
+              showConfirmButton: false,
+              timer: 1500
+            });
+            this.cargarProductos();
+          },
+          error: (err) => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al eliminar',
+              text: err.error.message || 'Ocurrió un error',
+              confirmButtonColor: '#FFCA2B'
+            });
+          }
+        });
+      }
+    });
+  }
+
+  // Cerrar modal y recargar productos
+  cerrarModal(evento: string) {
+    this.mostrarModal = false;
+    if (evento === 'ok') {
+      this.cargarProductos();
+    }
   }
 
   scrollLeft() {
@@ -80,5 +143,4 @@ export class ProductosListaAdminComponent implements OnInit {
       });
     }
   }
-
 }

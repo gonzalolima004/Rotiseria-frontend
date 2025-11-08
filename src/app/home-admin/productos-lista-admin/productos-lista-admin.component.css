@@ -20,7 +20,6 @@
   scroll-snap-type: x mandatory;
 }
 
-
 .categoria-item {
   flex: 0 0 auto;
   text-align: center;
@@ -84,17 +83,54 @@
   margin: 40px 0;
 }
 
+/* Header de categoría con botón agregar */
+.categoria-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
 .categoria-heading {
   font-size: 1.5rem;
   font-weight: 700;
   color: #1a1a1a;
   border-bottom: 3px solid #FFCA2B;
   padding-bottom: 12px;
-  margin-bottom: 28px;
+  margin-bottom: 0;
   position: relative;
+  flex-grow: 1;
 }
 
+/* Botón de agregar producto (círculo con +) */
+.btn-agregar-producto {
+  background: #FFCA2B;
+  border: none;
+  color: white;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(255, 202, 43, 0.3);
+  flex-shrink: 0;
+  margin-left: 15px;
+}
 
+.btn-agregar-producto:hover {
+  background: #e9b525;
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(255, 202, 43, 0.4);
+}
+
+.btn-agregar-producto:active {
+  transform: scale(0.95);
+}
 
 .product-card {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -103,12 +139,6 @@
   display: flex;
   flex-direction: column;
 }
-
-/* .product-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-  border-color: #FFCA2B;
-} */
 
 .product-card .card-img-top {
   height: 200px;
@@ -146,26 +176,102 @@
   margin-bottom: 14px;
 }
 
-.btn-add {
+/* Botones de editar y eliminar */
+.btn-editar {
   background: #FFCA2B;
   border: none;
-  color: #fff;
+  color: white;
   font-weight: 600;
-  padding: 10px 16px;
+  padding: 10px 12px;
   transition: all 0.3s ease;
   border-radius: 6px;
-  margin-top: auto;
+  font-size: 0.9rem;
 }
 
-.btn-add:hover {
-  background:#caa021;
+.btn-editar:hover {
+  background: #e9b525;
   transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(163, 123, 57, 0.3);
-  color: #fff;
+  box-shadow: 0 4px 12px rgba(255, 202, 43, 0.3);
+  color: white;
 }
 
-.btn-add:active {
+.btn-eliminar {
+  background: #7C662A;
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 10px 12px;
+  transition: all 0.3s ease;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.btn-eliminar:hover {
+  background: #5c4d21;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(124, 102, 42, 0.3);
+  color: white;
+}
+
+.btn-editar:active,
+.btn-eliminar:active {
   transform: translateY(0);
+}
+
+/* Modal overlay - PERFECTAMENTE CENTRADO */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeIn 0.2s ease;
+  overflow-y: auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.modal-content {
+  position: relative;
+  z-index: 10000;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Scrollbar personalizado para el modal */
+.modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: #FFCA2B;
+  border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: #e9b525;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* Responsive */
@@ -193,6 +299,12 @@
     font-size: 1.25rem;
   }
 
+  .btn-agregar-producto {
+    width: 40px;
+    height: 40px;
+    font-size: 1.3rem;
+  }
+
   .product-card .card-img-top {
     height: 160px;
   }
@@ -209,6 +321,12 @@
 
   .category-grid {
     gap: 12px;
+  }
+
+  .btn-editar,
+  .btn-eliminar {
+    font-size: 0.85rem;
+    padding: 8px 10px;
   }
 }
 
@@ -238,8 +356,8 @@
 .categoria-container-vertical {
   display: flex;
   flex-direction: column;
-  overflow-y: auto;      /* ✅ deja el scroll vertical visible */
-  overflow-x: hidden;    /* 🚫 oculta el scroll horizontal */
+  overflow-y: auto;
+  overflow-x: hidden;
   scroll-behavior: smooth;
   gap: 16px;
   padding: 13px 0;

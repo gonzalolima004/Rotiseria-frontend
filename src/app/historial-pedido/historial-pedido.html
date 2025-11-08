@@ -8,9 +8,9 @@
   </div>
 
   <div class="acciones">
-    <button class="btn-filtrar" (click)="abrirModal()">
-      <span class="icono-filtro">⚙</span>
-      Filtrar por fecha
+    <button class="btn-dashboard" (click)="abrirDashboard()">
+      <span class="icono-dashboard">📊</span>
+      Resumen
     </button>
   </div>
 
@@ -68,8 +68,11 @@
           <td>
             <div class="total">{{ pedido.monto_total | currency:'ARS':'symbol-narrow' }}</div>
           </td>
+
           <td>
-            <span class="badge-estado">{{ pedido.estado.nombre_estado_pedido }}</span>
+            <span [class]="'badge-estado ' + getEstadoClase(pedido.estado.nombre_estado_pedido)">
+              {{ pedido.estado.nombre_estado_pedido }}
+            </span>
           </td>
         </tr>
       </tbody>
@@ -82,31 +85,10 @@
   </div>
 </div>
 
-<!-- Modal mejorado -->
-<div class="modal-container" *ngIf="mostrarModal()">
-  <div class="modal-backdrop" (click)="cerrarModal()"></div>
-
-  <div class="modal" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h3>Filtrar por fecha</h3>
-      <button class="btn-cerrar-x" (click)="cerrarModal()">✕</button>
-    </div>
-
-    <div class="modal-content">
-      <div class="input-group">
-        <label>Desde:</label>
-        <input type="date" [(ngModel)]="fechaDesde" />
-      </div>
-
-      <div class="input-group">
-        <label>Hasta:</label>
-        <input type="date" [(ngModel)]="fechaHasta" />
-      </div>
-    </div>
-
-    <div class="modal-buttons">
-      <button class="btn-aplicar" (click)="aplicarFiltro()">Aplicar Filtro</button>
-      <button class="btn-cancelar" (click)="cerrarModal()">Cancelar</button>
-    </div>
-  </div>
-</div>
+<!-- 📊 MODAL DASHBOARD -->
+<app-dashboard-pedidos
+  *ngIf="modalDashboardVisible()"
+  [pedidos]="pedidos()"
+  (cerrar)="cerrarDashboard()"
+  (filtrosAplicados)="aplicarFiltrosDesdeModal($event)">
+</app-dashboard-pedidos>

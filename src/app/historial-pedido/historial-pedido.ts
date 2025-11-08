@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Header } from '../header/header';
+import { DashboardPedidosComponent } from './dashboard-pedido/dashboard-pedidos.component';
 
 interface Cliente {
   dni_cliente: string;
@@ -33,7 +34,7 @@ interface Pedido {
 @Component({
   selector: 'app-historial-pedido',
   standalone: true,
-  imports: [CommonModule, FormsModule, Header],
+  imports: [CommonModule, FormsModule, Header, DashboardPedidosComponent],
   templateUrl: './historial-pedido.html',
   styleUrls: ['./historial-pedido.css']
 })
@@ -41,15 +42,11 @@ export class HistorialPedidoComponent implements OnInit {
   pedidos = signal<Pedido[]>([]);
   pedidosFiltrados = signal<Pedido[]>([]);
   cargando = signal(true);
-
   paginaActual = signal(0);
   pedidosPorPagina = 10;
 
-  // ✅ Ahora modalVisible es una variable normal (no signal)
-  modalVisible: boolean = false;
-
-  fechaDesde: string = '';
-  fechaHasta: string = '';
+  // Modal Dashboard
+  modalDashboardVisible = signal(false);
 
   private apiUrl = 'http://localhost:8000/api/pedidos';
 
@@ -59,18 +56,54 @@ export class HistorialPedidoComponent implements OnInit {
     this.obtenerPedidos();
   }
 
-  /** 🔹 Carga todos los pedidos desde la API */
+  /** 🔹 Carga todos los pedidos desde la API y cambia automáticamente Confirmado → Completado */
   obtenerPedidos(): void {
     this.cargando.set(true);
     this.http.get<Pedido[]>(this.apiUrl).subscribe({
       next: (data) => {
-        this.pedidos.set(data);
-        this.pedidosFiltrados.set(data);
+        // Cambiar automáticamente los pedidos "Confirmado" a "Completado"
+        const pedidosActualizados = data.map(pedido => {
+          if (pedido.estado.nombre_estado_pedido === 'Confirmado') {
+            // Actualizar en el backend (sin bloquear la UI)
+            this.actualizarEstadoEnBackend(pedido.id_pedido);
+            
+            // Actualizar localmente
+            return {
+              ...pedido,
+              estado: { nombre_estado_pedido: 'Completado' }
+            };
+          }
+          return pedido;
+        });
+
+        this.pedidos.set(pedidosActualizados);
+        this.pedidosFiltrados.set(pedidosActualizados);
         this.cargando.set(false);
       },
       error: (err) => {
         console.error('❌ Error al cargar pedidos:', err);
         this.cargando.set(false);
+      }
+    });
+  }
+
+  /** 🔹 Actualizar estado en el backend (sin esperar respuesta) */
+  private actualizarEstadoEnBackend(idPedido: number): void {
+    // Intenta con PATCH primero (más común para actualizaciones parciales)
+    this.http.patch(`${this.apiUrl}/${idPedido}`, { 
+      estado: { nombre_estado_pedido: 'Completado' }
+    }).subscribe({
+      next: () => console.log(`✅ Pedido #${idPedido} actualizado a Completado en el backend`),
+      error: (err) => {
+        console.warn(`⚠️ PATCH falló, intentando con PUT para pedido #${idPedido}`);
+        
+        // Si PATCH falla, intenta con PUT
+        this.http.put(`${this.apiUrl}/${idPedido}`, { 
+          estado: { nombre_estado_pedido: 'Completado' }
+        }).subscribe({
+          next: () => console.log(`✅ Pedido #${idPedido} actualizado a Completado (con PUT)`),
+          error: (err2) => console.error(`❌ Error actualizando pedido #${idPedido}:`, err2)
+        });
       }
     });
   }
@@ -86,6 +119,7 @@ export class HistorialPedidoComponent implements OnInit {
     return this.pedidosFiltrados().slice(start, start + this.pedidosPorPagina);
   });
 
+  /** 🔹 Navegación de páginas */
   siguientePagina() {
     if ((this.paginaActual() + 1) * this.pedidosPorPagina < this.pedidosFiltrados().length) {
       this.paginaActual.update(v => v + 1);
@@ -98,41 +132,28 @@ export class HistorialPedidoComponent implements OnInit {
     }
   }
 
-  /** 🔹 Abre el modal */
-  abrirModal() {
-    console.log('🟡 Modal abierto');
-    this.modalVisible = true;
+  /** 📊 Abrir/Cerrar Dashboard */
+  abrirDashboard() {
+    this.modalDashboardVisible.set(true);
   }
 
-  /** 🔹 Cierra el modal */
-  cerrarModal() {
-    console.log('🟡 Modal cerrado');
-    this.modalVisible = false;
+  cerrarDashboard() {
+    this.modalDashboardVisible.set(false);
   }
 
-  /** 🔹 Aplica el filtro por fecha */
-  aplicarFiltro() {
-    const desde = this.fechaDesde ? new Date(this.fechaDesde) : null;
-    const hasta = this.fechaHasta ? new Date(this.fechaHasta) : null;
-
-    const filtrados = this.pedidos().filter(p => {
-      const fechaPedido = new Date(p.fecha_hora);
-      if (desde && fechaPedido < desde) return false;
-      if (hasta) {
-        const limite = new Date(hasta);
-        limite.setHours(23, 59, 59, 999);
-        if (fechaPedido > limite) return false;
-      }
-      return true;
-    });
-
-    this.pedidosFiltrados.set(filtrados);
+  /** 🔹 Aplicar filtros desde el Dashboard */
+  aplicarFiltrosDesdeModal(pedidosFiltrados: Pedido[]) {
+    this.pedidosFiltrados.set(pedidosFiltrados);
     this.paginaActual.set(0);
-    this.cerrarModal();
   }
 
-  /** 🔹 Devuelve si el modal está visible */
-  mostrarModal(): boolean {
-    return this.modalVisible;
+  /** 🔹 Obtener clase CSS según estado */
+  getEstadoClase(estado: string): string {
+    const clases: {[key: string]: string} = {
+      'Confirmado': 'estado-confirmado',
+      'Completado': 'estado-completado',
+      'Rechazado': 'estado-rechazado'
+    };
+    return clases[estado] || 'estado-default';
   }
 }
