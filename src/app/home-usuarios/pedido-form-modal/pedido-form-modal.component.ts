@@ -14,7 +14,7 @@ import { PedidoService } from '../../services/pedido.service';
 })
 export class PedidoFormModalComponent {
   @Input() items: any[] = [];
-  @Input() total = 0;
+  @Input() total = 0; // total base sin envío
   @Output() cerrar = new EventEmitter<void>();
   @Output() pedidoRealizado = new EventEmitter<void>();
 
@@ -26,13 +26,28 @@ export class PedidoFormModalComponent {
   id_modalidad_entrega = '';
   cargando = false;
 
+  costoEnvio = 2500;
+  totalConEnvio = 0;
+
   constructor(
     private clienteService: ClienteService,
     private pedidoService: PedidoService
-  ) { }
+  ) {}
+
+  ngOnInit() {
+    this.totalConEnvio = this.total;
+  }
 
   cerrarModal() {
     this.cerrar.emit();
+  }
+
+  actualizarTotal() {
+    if (this.id_modalidad_entrega === '2') {
+      this.totalConEnvio = this.total + this.costoEnvio;
+    } else {
+      this.totalConEnvio = this.total;
+    }
   }
 
   buscarClientePorDni() {
@@ -62,7 +77,6 @@ export class PedidoFormModalComponent {
   }
 
   enviarPedido() {
-    // 🔹 VALIDACIONES DE CAMPOS
     if (!this.dni_cliente.trim() || !this.nombre_cliente.trim() || !this.telefono_cliente.trim()) {
       Swal.fire({
         icon: 'warning',
@@ -113,22 +127,20 @@ export class PedidoFormModalComponent {
       return;
     }
 
-    // 🔹 CONTINÚA SI TODO ESTÁ COMPLETO
     this.cargando = true;
 
     const clientePayload = {
       dni_cliente: this.dni_cliente,
       nombre_cliente: this.nombre_cliente,
       telefono_cliente: this.telefono_cliente,
-      direccion_cliente:
-        this.id_modalidad_entrega == '2' ? this.direccion_cliente : ''
+      direccion_cliente: this.id_modalidad_entrega == '2' ? this.direccion_cliente : ''
     };
 
     this.clienteService.obtenerOCrearCliente(clientePayload).subscribe({
       next: () => {
         const pedidoPayload = {
           fecha_hora: new Date().toISOString().slice(0, 19).replace('T', ' '),
-          monto_total: this.total,
+          monto_total: this.totalConEnvio,
           dni_cliente: this.dni_cliente,
           id_metodo_pago: this.id_metodo_pago,
           id_estado_pedido: 1,
@@ -157,8 +169,6 @@ export class PedidoFormModalComponent {
               this.pedidoRealizado.emit();
               window.location.reload();
             });
-
-
           },
           error: (error) => {
             this.cargando = false;
@@ -173,7 +183,7 @@ export class PedidoFormModalComponent {
       },
       error: (error) => {
         this.cargando = false;
-        console.error('❌ Error al crear cliente:', error);
+        console.error('Error al crear cliente:', error);
         Swal.fire({
           icon: 'error',
           title: 'Error',

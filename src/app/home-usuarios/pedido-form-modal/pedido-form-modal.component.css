@@ -130,13 +130,11 @@
 }
 
 
-/* Texto al estar seleccionado */
 .form-check-card .form-check-input:checked + .form-check-label .check-content span {
   color: #CAA021;
 }
 
 
-/* Animación para campo condicional */
 .slide-down {
   animation: slideDown 0.3s ease-out;
 }
@@ -152,7 +150,6 @@
   }
 }
 
-/* Alerta del total */
 .alert-info {
   background: #ffe68a;
   border-left: 4px solid #FFCA2B;
@@ -164,7 +161,6 @@
 }
 
 
-/* Botones */
 .btn-lg {
   padding: 0.6rem 1.25rem;
   font-size: 0.95rem;
