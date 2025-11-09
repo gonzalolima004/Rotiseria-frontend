@@ -1,27 +1,32 @@
 .modal-container {
-  background: #FFFEBA; /* amarillo claro */
+  background: #FFFEBA;
   border-radius: 20px;
-  padding: 30px;
-  border: 3px solid #FFCA2B; /* amarillo oscuro */
-  color: #7C662A; /* marrón */
-  width: 600px; /* 👈 MÁS GRANDE (era 500px) */
+  padding: 20px;
+  border: 3px solid #FFCA2B;
+  color: #7C662A;
+  width: 500px;
   max-width: 95%;
+  max-height: 85vh;
+  overflow-y: auto;
   animation: fadeIn .2s ease;
   box-shadow: 0 10px 30px rgba(124,102,42,0.15);
   margin: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 h2 {
   color: #7C662A;
   font-weight: 700;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
+  flex-shrink: 0;
 }
 
 label {
   font-weight: 600;
   color: #7C662A;
-  margin-bottom: 5px;
+  margin-bottom: 3px;
   display: block;
 }
 
@@ -30,9 +35,10 @@ textarea.form-control,
 select.form-control {
   border: 2px solid #FFCA2B;
   background: white;
-  padding: 12px;
-  font-size: 1rem;
+  padding: 10px;
+  font-size: 0.95rem;
   border-radius: 8px;
+  width: 100%;
 }
 
 input.form-control:focus,
@@ -43,15 +49,21 @@ select.form-control:focus {
   outline: none;
 }
 
+textarea.form-control {
+  resize: vertical;
+  min-height: 60px;
+}
+
 button.btn-success {
   background: #FFCA2B;
   border: none;
   color: #7C662A;
   font-weight: 700;
-  padding: 14px;
-  font-size: 1.05rem;
+  padding: 12px;
+  font-size: 1rem;
   border-radius: 10px;
   transition: all 0.3s ease;
+  width: 100%;
 }
 
 button.btn-success:hover {
@@ -70,10 +82,11 @@ button.btn-secondary {
   border: none;
   color: white;
   font-weight: 700;
-  padding: 14px;
-  font-size: 1.05rem;
+  padding: 12px;
+  font-size: 1rem;
   border-radius: 10px;
   transition: all 0.3s ease;
+  width: 100%;
 }
 
 button.btn-secondary:hover {
@@ -84,27 +97,64 @@ button.btn-secondary:hover {
 form {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 12px;
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+/* Contenedor de botones para que siempre estén visibles */
+.button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+  flex-shrink: 0;
+  padding-top: 10px;
+  border-top: 2px solid #FFCA2B;
 }
 
 .preview-container {
   text-align: center;
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
 .preview-container p {
   font-weight: 600;
   color: #7C662A;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .img-thumbnail {
   border: 2px solid #FFCA2B;
   border-radius: 10px;
   padding: 5px;
-  max-height: 250px; /* 👈 MÁS GRANDE */
+  max-height: 180px;
   width: auto;
   object-fit: cover;
+}
+
+/* Scrollbar personalizado */
+.modal-container::-webkit-scrollbar,
+form::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-container::-webkit-scrollbar-track,
+form::-webkit-scrollbar-track {
+  background: #FFFEBA;
+  border-radius: 10px;
+}
+
+.modal-container::-webkit-scrollbar-thumb,
+form::-webkit-scrollbar-thumb {
+  background: #FFCA2B;
+  border-radius: 10px;
+}
+
+.modal-container::-webkit-scrollbar-thumb:hover,
+form::-webkit-scrollbar-thumb:hover {
+  background: #e9b525;
 }
 
 @keyframes fadeIn {
@@ -115,5 +165,22 @@ form {
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .modal-container {
+    width: 95%;
+    padding: 15px;
+    max-height: 90vh;
+  }
+  
+  h2 {
+    font-size: 1.3rem;
+  }
+  
+  .img-thumbnail {
+    max-height: 120px;
   }
 }

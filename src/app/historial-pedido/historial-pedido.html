@@ -3,7 +3,7 @@
 <div class="contenedor-historial">
   <div class="titulo-con-flechas">
     <button class="flecha" (click)="anteriorPagina()">&#10094;</button>
-    <h2>Historial de Pedidos</h2>
+    <h2>Control de Pedidos</h2>
     <button class="flecha" (click)="siguientePagina()">&#10095;</button>
   </div>
 
@@ -28,12 +28,15 @@
           <th>Detalle del Pedido</th>
           <th>Total</th>
           <th>Estado</th>
+          <th>Acciones</th>
         </tr>
       </thead>
+
       <tbody>
         <tr *ngFor="let pedido of pedidosPaginados()" class="fila-pedido">
+
           <td>
-            <div class="numero-pedido">#{{ pedido.id_pedido }}</div>
+            <div class="numero-pedido">{{ pedido.id_pedido }}</div>
             <div class="fecha-pedido">{{ formatearFecha(pedido.fecha_hora) }}</div>
           </td>
 
@@ -48,7 +51,7 @@
               <div *ngFor="let det of pedido.detalles" class="detalle-item">
                 <div class="detalle-linea">
                   <span class="detalle-label">Producto:</span>
-                  <span class="detalle-valor">{{ det.id_producto }}</span>
+                  <span class="detalle-valor">{{ det.nombre_producto }}</span>
                 </div>
                 <div class="detalle-linea">
                   <span class="detalle-label">Cantidad:</span>
@@ -60,6 +63,7 @@
                 </div>
               </div>
             </div>
+
             <ng-template #sinDetalles>
               <div class="sin-datos-detalle">Sin detalles</div>
             </ng-template>
@@ -74,6 +78,32 @@
               {{ pedido.estado.nombre_estado_pedido }}
             </span>
           </td>
+
+          <td>
+
+            <!-- Confirmado → opciones -->
+            <button
+              *ngIf="pedido.estado.nombre_estado_pedido === 'Confirmado'"
+              class="btn-completar"
+              (click)="completarPedido(pedido)">
+              ✓ Entregado
+            </button>
+
+            <button
+              *ngIf="pedido.estado.nombre_estado_pedido === 'Confirmado'"
+              class="btn-rechazar"
+              (click)="rechazarPedido(pedido)">
+              ✕ Rechazar
+            </button>
+
+            <!-- Entregado -->
+            <span
+              *ngIf="pedido.estado.nombre_estado_pedido === 'Entregado'"
+              class="texto-completado">
+              ✓ Entregado
+            </span>
+          </td>
+
         </tr>
       </tbody>
     </table>
@@ -81,11 +111,11 @@
 
   <div *ngIf="!cargando() && pedidosPaginados().length === 0" class="sin-datos">
     <div class="sin-datos-icono">📦</div>
-    <p>No hay pedidos registrados.</p>
+    <p>No hay pedidos confirmados o entregados.</p>
   </div>
 </div>
 
-<!-- 📊 MODAL DASHBOARD -->
+<!-- MODAL DASHBOARD -->
 <app-dashboard-pedidos
   *ngIf="modalDashboardVisible()"
   [pedidos]="pedidos()"

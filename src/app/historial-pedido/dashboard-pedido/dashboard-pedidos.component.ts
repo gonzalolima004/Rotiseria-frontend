@@ -36,6 +36,7 @@ interface Pedido {
   styleUrls: ['./dashboard-pedidos.component.css']
 })
 export class DashboardPedidosComponent {
+
   @Input() pedidos: Pedido[] = [];
   @Output() cerrar = new EventEmitter<void>();
   @Output() filtrosAplicados = new EventEmitter<Pedido[]>();
@@ -44,25 +45,29 @@ export class DashboardPedidosComponent {
   fechaHasta = signal('');
   pedidosFiltrados = signal<Pedido[]>([]);
 
-  ngOnInit() {
-    this.pedidosFiltrados.set(this.pedidos);
-  }
-
+  /** ✅ Reaccionar correctamente cuando llegan los pedidos */
   ngOnChanges() {
-    if (!this.fechaDesde() && !this.fechaHasta()) {
-      this.pedidosFiltrados.set(this.pedidos);
-    }
+    this.aplicarEstadoBase();
   }
 
-  /** 📊 ESTADÍSTICAS COMPUTADAS */
+  /** ✅ Confirmados + Entregados */
+  private aplicarEstadoBase() {
+    const visibles = this.pedidos.filter(
+      p => p.estado.nombre_estado_pedido === 'Confirmado' ||
+           p.estado.nombre_estado_pedido === 'Entregado'
+    );
+    this.pedidosFiltrados.set(visibles);
+  }
+
+  /** 📊 Estadísticas correctas */
   estadisticas = computed(() => {
     const pedidos = this.pedidosFiltrados();
-    
+
     return {
       totalPedidos: pedidos.length,
       montoTotal: pedidos.reduce((sum, p) => sum + p.monto_total, 0),
-      promedioVenta: pedidos.length > 0 
-        ? pedidos.reduce((sum, p) => sum + p.monto_total, 0) / pedidos.length 
+      promedioVenta: pedidos.length > 0
+        ? pedidos.reduce((sum, p) => sum + p.monto_total, 0) / pedidos.length
         : 0,
       porEstado: this.contarPorEstado(pedidos)
     };
@@ -76,7 +81,7 @@ export class DashboardPedidosComponent {
     }, {} as {[key: string]: number});
   }
 
-  /** 🔍 APLICAR FILTRO POR FECHA */
+  /** ✅ Filtro por fecha (ahora correcto) */
   aplicarFiltro() {
     const desde = this.fechaDesde() ? new Date(this.fechaDesde()) : null;
     const hasta = this.fechaHasta() ? new Date(this.fechaHasta()) : null;
@@ -86,15 +91,22 @@ export class DashboardPedidosComponent {
       return;
     }
 
-    const filtrados = this.pedidos.filter(p => {
+    const visibles = this.pedidos.filter(
+      p => p.estado.nombre_estado_pedido === 'Confirmado' ||
+           p.estado.nombre_estado_pedido === 'Entregado'
+    );
+
+    const filtrados = visibles.filter(p => {
       const fechaPedido = new Date(p.fecha_hora);
-      
+
       if (desde && fechaPedido < desde) return false;
+
       if (hasta) {
         const limite = new Date(hasta);
         limite.setHours(23, 59, 59, 999);
         if (fechaPedido > limite) return false;
       }
+
       return true;
     });
 
@@ -102,29 +114,26 @@ export class DashboardPedidosComponent {
     this.filtrosAplicados.emit(filtrados);
   }
 
-  /** 🔄 LIMPIAR FILTROS */
+  /** ✅ Limpiar filtros */
   limpiarFiltros() {
     this.fechaDesde.set('');
     this.fechaHasta.set('');
-    this.pedidosFiltrados.set(this.pedidos);
-    this.filtrosAplicados.emit(this.pedidos);
+    this.aplicarEstadoBase();
+    this.filtrosAplicados.emit(this.pedidosFiltrados());
   }
 
-  /** ❌ CERRAR MODAL */
   cerrarModal() {
     this.cerrar.emit();
   }
 
-  /** 🎨 Obtener clase CSS según estado */
   getEstadoClase(estado: string): string {
     const clases: {[key: string]: string} = {
       'Confirmado': 'estado-confirmado',
-      'Completado': 'estado-completado',
+      'Entregado': 'estado-completado',
       'Rechazado': 'estado-rechazado'
     };
     return clases[estado] || 'estado-default';
   }
 
-  /** 🔹 Obtener keys de objeto */
   Object = Object;
 }

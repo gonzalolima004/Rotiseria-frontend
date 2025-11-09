@@ -95,9 +95,11 @@
           <div 
             *ngFor="let estado of Object.keys(estadisticas().porEstado)" 
             class="estado-item">
+            
             <span [class]="'badge-estado ' + getEstadoClase(estado)">
               {{ estado }}
-              </span>
+            </span>
+
             <span class="estado-cantidad">
               {{ estadisticas().porEstado[estado] }} pedido(s)
             </span>

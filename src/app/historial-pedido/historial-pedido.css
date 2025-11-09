@@ -107,12 +107,35 @@ h2 {
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  margin-right: 8px;
 }
 
 .btn-completar:hover {
   background-color: #218838;
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+}
+
+/* Botón Rechazar */
+.btn-rechazar {
+  background-color: #dc3545;
+  border: 2px solid #dc3545;
+  color: white;
+  padding: 8px 16px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-rechazar:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
 }
 
 .texto-completado {
@@ -348,5 +371,12 @@ h2 {
   .tabla-pedidos td {
     padding: 12px 8px;
     font-size: 0.85rem;
+  }
+
+  .btn-completar,
+  .btn-rechazar {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    margin-bottom: 4px;
   }
 }

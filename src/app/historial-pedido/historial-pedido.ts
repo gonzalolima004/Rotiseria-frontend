@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Header } from '../header/header';
 import { DashboardPedidosComponent } from './dashboard-pedido/dashboard-pedidos.component';
+import Swal from 'sweetalert2';
 
 interface Cliente {
   dni_cliente: string;
@@ -16,6 +17,7 @@ interface DetallePedido {
   id_producto: number;
   cantidad: number;
   subtotal: number;
+  nombre_producto?: string;
 }
 
 interface Estado {
@@ -31,6 +33,11 @@ interface Pedido {
   detalles: DetallePedido[];
 }
 
+interface Producto {
+  id_producto: number;
+  nombre_producto: string;
+}
+
 @Component({
   selector: 'app-historial-pedido',
   standalone: true,
@@ -39,87 +46,147 @@ interface Pedido {
   styleUrls: ['./historial-pedido.css']
 })
 export class HistorialPedidoComponent implements OnInit {
+
   pedidos = signal<Pedido[]>([]);
   pedidosFiltrados = signal<Pedido[]>([]);
+  productos = signal<Producto[]>([]);
   cargando = signal(true);
   paginaActual = signal(0);
   pedidosPorPagina = 10;
 
-  // Modal Dashboard
   modalDashboardVisible = signal(false);
 
   private apiUrl = 'http://localhost:8000/api/pedidos';
+  private productosUrl = 'http://localhost:8000/api/productos';
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.obtenerPedidos();
+    this.cargarProductos();
   }
 
-  /** 🔹 Carga todos los pedidos desde la API y cambia automáticamente Confirmado → Completado */
+  cargarProductos(): void {
+    this.http.get<Producto[]>(this.productosUrl).subscribe({
+      next: (productos) => {
+        this.productos.set(productos);
+        this.obtenerPedidos();
+      },
+      error: () => this.obtenerPedidos()
+    });
+  }
+
   obtenerPedidos(): void {
     this.cargando.set(true);
+
     this.http.get<Pedido[]>(this.apiUrl).subscribe({
       next: (data) => {
-        // Cambiar automáticamente los pedidos "Confirmado" a "Completado"
-        const pedidosActualizados = data.map(pedido => {
-          if (pedido.estado.nombre_estado_pedido === 'Confirmado') {
-            // Actualizar en el backend (sin bloquear la UI)
-            this.actualizarEstadoEnBackend(pedido.id_pedido);
-            
-            // Actualizar localmente
-            return {
-              ...pedido,
-              estado: { nombre_estado_pedido: 'Completado' }
-            };
-          }
-          return pedido;
-        });
 
-        this.pedidos.set(pedidosActualizados);
-        this.pedidosFiltrados.set(pedidosActualizados);
+        const pedidosVisibles = data.filter(
+          pedido =>
+            pedido.estado.nombre_estado_pedido === 'Confirmado' ||
+            pedido.estado.nombre_estado_pedido === 'Entregado'
+        );
+
+        const pedidosConNombres = pedidosVisibles.map(pedido => ({
+          ...pedido,
+          detalles: pedido.detalles.map(detalle => ({
+            ...detalle,
+            nombre_producto: this.obtenerNombreProducto(detalle.id_producto)
+          }))
+        }));
+
+        this.pedidos.set(pedidosConNombres);
+        this.pedidosFiltrados.set(pedidosConNombres);
         this.cargando.set(false);
       },
       error: (err) => {
-        console.error('❌ Error al cargar pedidos:', err);
+        console.error('Error al cargar pedidos:', err);
         this.cargando.set(false);
       }
     });
   }
 
-  /** 🔹 Actualizar estado en el backend (sin esperar respuesta) */
-  private actualizarEstadoEnBackend(idPedido: number): void {
-    // Intenta con PATCH primero (más común para actualizaciones parciales)
-    this.http.patch(`${this.apiUrl}/${idPedido}`, { 
-      estado: { nombre_estado_pedido: 'Completado' }
+  obtenerNombreProducto(id: number): string {
+    const prod = this.productos().find(p => p.id_producto === id);
+    return prod ? prod.nombre_producto : `Producto #${id}`;
+  }
+
+  /** ✅ Confirmado → ENTREGADO */
+  completarPedido(pedido: Pedido): void {
+    if (pedido.estado.nombre_estado_pedido !== 'Confirmado') return;
+
+    this.http.put(`${this.apiUrl}/${pedido.id_pedido}`, {
+      id_estado_pedido: 4 // ENTREGADO
     }).subscribe({
-      next: () => console.log(`✅ Pedido #${idPedido} actualizado a Completado en el backend`),
-      error: (err) => {
-        console.warn(`⚠️ PATCH falló, intentando con PUT para pedido #${idPedido}`);
-        
-        // Si PATCH falla, intenta con PUT
-        this.http.put(`${this.apiUrl}/${idPedido}`, { 
-          estado: { nombre_estado_pedido: 'Completado' }
-        }).subscribe({
-          next: () => console.log(`✅ Pedido #${idPedido} actualizado a Completado (con PUT)`),
-          error: (err2) => console.error(`❌ Error actualizando pedido #${idPedido}:`, err2)
+      next: () => {
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Pedido entregado',
+          text: `El pedido #${pedido.id_pedido} fue marcado como entregado.`,
+          confirmButtonColor: '#4CAF50'
         });
-      }
+
+        this.obtenerPedidos();
+      },
+      error: (err) => console.error('Error al entregar pedido:', err)
     });
   }
 
-  /** 🔹 Convierte la fecha al formato local */
-  formatearFecha(fecha: string): string {
-    return new Date(fecha).toLocaleString('es-AR');
+  /** ✅ Rechazar + SweetAlert */
+  rechazarPedido(pedido: Pedido): void {
+    if (pedido.estado.nombre_estado_pedido !== 'Confirmado') return;
+
+    Swal.fire({
+      title: `¿Rechazar pedido #${pedido.id_pedido}?`,
+      text: 'Esta acción eliminará el pedido de forma permanente.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, rechazar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+
+      if (result.isConfirmed) {
+
+        // Cambiar estado a rechazado
+        this.http.put(`${this.apiUrl}/${pedido.id_pedido}`, {
+          id_estado_pedido: 3 // RECHAZADO
+        }).subscribe({
+          next: () => {
+            // Luego eliminarlo
+            this.http.delete(`${this.apiUrl}/${pedido.id_pedido}`).subscribe({
+              next: () => {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Pedido rechazado',
+                  text: `El pedido #${pedido.id_pedido} fue eliminado correctamente.`,
+                  confirmButtonColor: '#d33'
+                });
+
+                this.obtenerPedidos();
+              },
+              error: () => this.obtenerPedidos()
+            });
+          },
+          error: (err) => console.error('Error al rechazar pedido:', err)
+        });
+
+      }
+
+    });
   }
 
-  /** 🔹 Devuelve los pedidos de la página actual */
+  formatearFecha(f: string): string {
+    return new Date(f).toLocaleString('es-AR');
+  }
+
   pedidosPaginados = computed(() => {
     const start = this.paginaActual() * this.pedidosPorPagina;
     return this.pedidosFiltrados().slice(start, start + this.pedidosPorPagina);
   });
 
-  /** 🔹 Navegación de páginas */
   siguientePagina() {
     if ((this.paginaActual() + 1) * this.pedidosPorPagina < this.pedidosFiltrados().length) {
       this.paginaActual.update(v => v + 1);
@@ -132,7 +199,6 @@ export class HistorialPedidoComponent implements OnInit {
     }
   }
 
-  /** 📊 Abrir/Cerrar Dashboard */
   abrirDashboard() {
     this.modalDashboardVisible.set(true);
   }
@@ -141,17 +207,20 @@ export class HistorialPedidoComponent implements OnInit {
     this.modalDashboardVisible.set(false);
   }
 
-  /** 🔹 Aplicar filtros desde el Dashboard */
   aplicarFiltrosDesdeModal(pedidosFiltrados: Pedido[]) {
-    this.pedidosFiltrados.set(pedidosFiltrados);
+    const visibles = pedidosFiltrados.filter(
+      pedido =>
+        pedido.estado.nombre_estado_pedido === 'Confirmado' ||
+        pedido.estado.nombre_estado_pedido === 'Entregado'
+    );
+    this.pedidosFiltrados.set(visibles);
     this.paginaActual.set(0);
   }
 
-  /** 🔹 Obtener clase CSS según estado */
   getEstadoClase(estado: string): string {
-    const clases: {[key: string]: string} = {
+    const clases: { [key: string]: string } = {
       'Confirmado': 'estado-confirmado',
-      'Completado': 'estado-completado',
+      'Entregado': 'estado-completado',
       'Rechazado': 'estado-rechazado'
     };
     return clases[estado] || 'estado-default';
