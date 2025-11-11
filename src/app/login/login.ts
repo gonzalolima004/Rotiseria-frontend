@@ -1,20 +1,23 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
-import { RouterModule, Router } from '@angular/router';
-import { NgIf } from '@angular/common'; // 👈 Importar NgIf
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, ElementRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { CommonModule} from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import Swal from 'sweetalert2';
 import { AuthService } from '../services/auth';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, RouterModule, NgIf], // 👈 Agregar NgIf aquí
+  imports: [CommonModule, FormsModule],
   templateUrl: './login.html',
   styleUrls: ['./login.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Login {
+  @ViewChild('emailInput') emailInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('passwordInput') passwordInput!: ElementRef<HTMLInputElement>;
+
   loading = false;
-  error: string | null = null;
 
   constructor(
     private auth: AuthService,
@@ -22,48 +25,58 @@ export class Login {
     private cdr: ChangeDetectorRef
   ) {}
 
-  login(form: NgForm) {
-    form.form.markAllAsTouched();
+  irAForgotPassword() {
+    this.router.navigate(['/forgot-password']);
+  }
 
-    if (!form.valid) {
-      this.error = 'Por favor, completa todos los campos correctamente.';
-      this.cdr.markForCheck();
+  async onSubmit() {
+    const email = this.emailInput?.nativeElement.value?.trim();
+    const password = this.passwordInput?.nativeElement.value?.trim();
+
+    if (!email || !password) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Campos incompletos',
+        text: 'Por favor, completa todos los campos antes de continuar.',
+        confirmButtonColor: '#3085d6',
+      });
       return;
     }
 
     this.loading = true;
-    this.error = null;
     this.cdr.markForCheck();
 
-    const { email, password } = form.value;
-
     this.auth.login(email, password).subscribe({
-      next: () => {
+      next: async () => {
         this.loading = false;
         this.cdr.markForCheck();
+
         this.router.navigate(['/admin']);
       },
-      error: (error) => {
+      error: async (error) => {
         this.loading = false;
 
+        let message = 'Error inesperado. Inténtelo de nuevo.';
+        let icon: 'error' | 'warning' = 'error';
+
         if (error.status === 401) {
-          this.error = 'Credenciales incorrectas. Verifique su email y contraseña.';
+          message = 'Credenciales incorrectas. Verifique su email y contraseña.';
         } else if (error.status === 0) {
-          this.error = 'Error de conexión. Verifique su conexión a internet.';
+          message = 'Error de conexión. Verifique su conexión a internet.';
         } else if (error.status >= 500) {
-          this.error = 'Error del servidor. Inténtelo más tarde.';
-        } else {
-          this.error = 'Error inesperado. Inténtelo de nuevo.';
+          message = 'Error del servidor. Inténtelo más tarde.';
         }
+
+        await Swal.fire({
+          icon,
+          title: 'Error al iniciar sesión',
+          text: message,
+          confirmButtonColor: '#d33',
+        });
 
         this.cdr.markForCheck();
         console.error('Login error:', error);
       },
     });
-  }
-
-  clearError() {
-    this.error = null;
-    this.cdr.markForCheck();
   }
 }

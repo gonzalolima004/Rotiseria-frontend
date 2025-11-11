@@ -12,17 +12,15 @@
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              stroke-width="2">
+              stroke-width="2"
+            >
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
               <circle cx="12" cy="7" r="4"></circle>
             </svg>
           </div>
           <h2 class="modal-title fw-bold m-0">Datos del pedido</h2>
         </div>
-        <button
-          type="button"
-          class="btn-close btn-close-black"
-          (click)="cerrarModal()"></button>
+        <button type="button" class="btn-close btn-close-black" (click)="cerrarModal()"></button>
       </div>
 
       <!-- Body -->
@@ -39,29 +37,37 @@
                 name="dni_cliente"
                 maxlength="8"
                 placeholder="Ej: 44441308"
-                (blur)="buscarClientePorDni()" />
+                (blur)="buscarClientePorDni()"
+              />
             </div>
             <div class="col-md-6">
-              <label class="form-label fw-bold small text-muted text-uppercase">Nombre completo</label>
+              <label class="form-label fw-bold small text-muted text-uppercase"
+                >Nombre completo</label
+              >
               <input
                 maxlength="50"
                 type="text"
                 class="form-control form-control-lg"
                 [(ngModel)]="nombre_cliente"
+                (ngModelChange)="nombre_cliente = capitalizar($event)"
                 name="nombre_cliente"
-                placeholder="Tu nombre completo" />
+                placeholder="Tu nombre completo"
+              />
             </div>
           </div>
 
           <div class="mb-3">
             <label class="form-label fw-bold small text-muted text-uppercase">Teléfono</label>
             <input
-              maxlength="15"
               type="text"
               class="form-control form-control-lg"
-              [(ngModel)]="telefono_cliente"
+              [value]="telefono_cliente"
+              (input)="onTelefonoInput($event)"
+              (keydown)="bloquearPrefijo($event)"
+              maxlength="17"
               name="telefono_cliente"
-              placeholder="Ej: 3454030582" />
+              placeholder="+54 345 4030582"
+            />
           </div>
 
           <!-- Tipo de entrega -->
@@ -79,7 +85,8 @@
                   id="retiro"
                   [value]="'1'"
                   [(ngModel)]="id_modalidad_entrega"
-                  (change)="actualizarTotal()" />
+                  (change)="actualizarTotal()"
+                />
                 <label class="form-check-label" for="retiro">
                   <div class="check-content">
                     <svg
@@ -88,7 +95,8 @@
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
-                      stroke-width="2">
+                      stroke-width="2"
+                    >
                       <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                       <polyline points="9 22 9 12 15 12 15 22"></polyline>
                     </svg>
@@ -106,7 +114,8 @@
                   id="envio"
                   [value]="'2'"
                   [(ngModel)]="id_modalidad_entrega"
-                  (change)="actualizarTotal()" />
+                  (change)="actualizarTotal()"
+                />
                 <label class="form-check-label" for="envio">
                   <div class="check-content">
                     <svg
@@ -115,7 +124,8 @@
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
-                      stroke-width="2">
+                      stroke-width="2"
+                    >
                       <rect x="1" y="3" width="15" height="13"></rect>
                       <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
                       <circle cx="5.5" cy="18.5" r="2.5"></circle>
@@ -130,14 +140,18 @@
 
           <!-- Dirección -->
           <div class="mb-3 slide-down" *ngIf="id_modalidad_entrega === '2'">
-            <label class="form-label fw-bold small text-muted text-uppercase">Dirección de entrega</label>
+            <label class="form-label fw-bold small text-muted text-uppercase"
+              >Dirección de entrega</label
+            >
             <input
               type="text"
               maxlength="40"
               class="form-control form-control-lg"
               [(ngModel)]="direccion_cliente"
+              (ngModelChange)="direccion_cliente = capitalizar($event)"
               name="direccion_cliente"
-              placeholder="Calle, número, apartamento" />
+              placeholder="Calle, número, apartamento"
+            />
           </div>
 
           <!-- Forma de pago -->
@@ -153,10 +167,18 @@
                   name="metodo_pago"
                   id="efectivo"
                   [value]="'1'"
-                  [(ngModel)]="id_metodo_pago" />
+                  [(ngModel)]="id_metodo_pago"
+                />
                 <label class="form-check-label" for="efectivo">
                   <div class="check-content">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
                       <line x1="12" y1="1" x2="12" y2="23"></line>
                       <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                     </svg>
@@ -172,10 +194,18 @@
                   name="metodo_pago"
                   id="tarjeta"
                   [value]="'2'"
-                  [(ngModel)]="id_metodo_pago" />
+                  [(ngModel)]="id_metodo_pago"
+                />
                 <label class="form-check-label" for="tarjeta">
                   <div class="check-content">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
                       <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
                       <line x1="1" y1="10" x2="23" y2="10"></line>
                     </svg>
@@ -191,10 +221,18 @@
                   name="metodo_pago"
                   id="transferencia"
                   [value]="'3'"
-                  [(ngModel)]="id_metodo_pago" />
+                  [(ngModel)]="id_metodo_pago"
+                />
                 <label class="form-check-label" for="transferencia">
                   <div class="check-content">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
                       <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
                     </svg>
                     <span class="fw-bold">Transferencia</span>
@@ -205,34 +243,33 @@
           </div>
 
           <!-- Totales -->
-<div class="alert alert-info d-flex flex-column py-3 mb-0 border-0">
-  <ng-container *ngIf="id_modalidad_entrega === '2'; else soloTotal">
-    <div class="d-flex justify-content-between fw-bold fs-5">
-      <span class="text-primary">Total del pedido:</span>
-      <span class="text-primary">$ {{ total }}</span>
-    </div>
+          <div class="alert alert-info d-flex flex-column py-3 mb-0 border-0">
+            <ng-container *ngIf="id_modalidad_entrega === '2'; else soloTotal">
+              <div class="d-flex justify-content-between fw-bold fs-5">
+                <span class="text-primary">Total del pedido:</span>
+                <span class="text-primary">$ {{ total }}</span>
+              </div>
 
-    <div class="d-flex justify-content-between fw-bold fs-5">
-      <span class="text-primary">Envío:</span>
-      <span class="text-primary">$ {{ costoEnvio }}</span>
-    </div>
+              <div class="d-flex justify-content-between fw-bold fs-5">
+                <span class="text-primary">Envío:</span>
+                <span class="text-primary">$ {{ costoEnvio }}</span>
+              </div>
 
-    <hr class="my-2" />
+              <hr class="my-2" />
 
-    <div class="d-flex justify-content-between align-items-center">
-      <span class="fw-bold fs-5 text-primary text-uppercase">Total a pagar:</span>
-      <span class="fw-bold fs-4 text-primary">$ {{ totalConEnvio }}</span>
-    </div>
-  </ng-container>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="fw-bold fs-5 text-primary text-uppercase">Total a pagar:</span>
+                <span class="fw-bold fs-4 text-primary">$ {{ totalConEnvio }}</span>
+              </div>
+            </ng-container>
 
-  <ng-template #soloTotal>
-    <div class="d-flex justify-content-between align-items-center">
-      <span class="fw-bold fs-5 text-primary text-uppercase">Total a pagar:</span>
-      <span class="fw-bold fs-4 text-primary">$ {{ totalConEnvio }}</span>
-    </div>
-  </ng-template>
-</div>
-
+            <ng-template #soloTotal>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="fw-bold fs-5 text-primary text-uppercase">Total a pagar:</span>
+                <span class="fw-bold fs-4 text-primary">$ {{ totalConEnvio }}</span>
+              </div>
+            </ng-template>
+          </div>
         </form>
       </div>
 
@@ -241,13 +278,15 @@
         <button
           class="btn btn-outline-secondary btn-lg flex-grow-1"
           (click)="cerrarModal()"
-          [disabled]="cargando">
+          [disabled]="cargando"
+        >
           Cancelar
         </button>
         <button
           class="btn btn-primary btn-lg flex-grow-1 fw-bold"
           (click)="enviarPedido()"
-          [disabled]="cargando">
+          [disabled]="cargando"
+        >
           {{ cargando ? 'Procesando...' : 'Realizar pedido' }}
         </button>
       </div>
