@@ -87,7 +87,7 @@ export class ReporteVentasComponent {
     for (const fila of this.filasFiltradas()) {
       for (const it of (fila.items ?? [])) {
         const key = it.id_producto;
-        const prev = mapa.get(key) ?? { id: key, nombre: it.nombre_producto ?? `Prod ${key}`, cantidad: 0 };
+        const prev = mapa.get(key) ?? { id: key, nombre: it.nombre_producto ?? `Producto eliminado`, cantidad: 0 };
         prev.cantidad += (it.cantidad ?? 0);
         // si en alguna fila aparece el nombre, nos quedamos con él
         if (it.nombre_producto) prev.nombre = it.nombre_producto;
@@ -153,93 +153,5 @@ export class ReporteVentasComponent {
   money(v: number) {
     if (v == null) return '-';
     return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 2 }).format(v);
-  }
-
-  //ELIMINACION Y EDICION DE VENTAS
-
-   // ======= Estado para edición/eliminación =======
-  editOpen = signal<boolean>(false);
-  deleteOpen = signal<boolean>(false);
-
-  // fila seleccionada
-  selected = signal<FilaReporte | null>(null);
-
-  // formulario de edición (campos que acepta tu backend)
-  editFecha = signal<string>('');          // "YYYY-MM-DD"
-  editMonto = signal<string>('');          // lo casteamos a number al enviar
-  editIdPedido = signal<number>(0);
-
-  // abrir modal de edición
-  openEdit(f: FilaReporte) {
-    this.selected.set(f);
-    this.editFecha.set(f.fecha);
-    this.editMonto.set(String(f.monto_total ?? ''));
-    this.editIdPedido.set(f.id_pedido);
-    this.editOpen.set(true);
-  }
-
-  // enviar edición
-  saveEdit() {
-    const f = this.selected();
-    if (!f) return;
-    const payload = {
-      fecha: this.editFecha(),
-      monto_venta: Number(this.editMonto()),
-      id_pedido: this.editIdPedido()
-    };
-    // validación mínima
-    if (!payload.fecha || !Number.isFinite(payload.monto_venta) || !payload.id_pedido) return;
-
-    this.api.updateVenta(f.id_venta, payload).subscribe({
-      next: () => {
-        // actualizar en memoria (optimista)
-        const updated = this.filas().map(row => {
-          if (row.id_venta === f.id_venta) {
-            return {
-              ...row,
-              fecha: payload.fecha,
-              monto_total: payload.monto_venta,
-              id_pedido: payload.id_pedido
-            };
-          }
-          return row;
-        });
-        this.filas.set(updated);
-        this.editOpen.set(false);
-      },
-      error: (e) => {
-        console.error(e);
-        alert('No se pudo actualizar la venta.');
-      }
-    });
-  }
-
-  // abrir confirmación de eliminación
-  openDelete(f: FilaReporte) {
-    this.selected.set(f);
-    this.deleteOpen.set(true);
-  }
-
-  // confirmar eliminación
-  confirmDelete() {
-    const f = this.selected();
-    if (!f) return;
-    this.api.deleteVenta(f.id_venta).subscribe({
-      next: () => {
-        // quitar de la lista (optimista)
-        this.filas.set(this.filas().filter(x => x.id_venta !== f.id_venta));
-        this.deleteOpen.set(false);
-      },
-      error: (e) => {
-        console.error(e);
-        alert('No se pudo eliminar la venta.');
-      }
-    });
-  }
-
-  cancelModals() {
-    this.editOpen.set(false);
-    this.deleteOpen.set(false);
-    this.selected.set(null);
   }
 }
