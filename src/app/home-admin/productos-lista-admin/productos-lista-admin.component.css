@@ -78,12 +78,12 @@
   transform: scale(0.95);
 }
 
-/* Sección de categoría mejorada */
+/* Sección de categoría */
 .categoria-section {
   margin: 40px 0;
 }
 
-/* Header de categoría con botón agregar */
+/* Header de categoría */
 .categoria-header {
   display: flex;
   align-items: center;
@@ -102,7 +102,7 @@
   flex-grow: 1;
 }
 
-/* Botón de agregar producto (círculo con +) */
+/* Botón agregar */
 .btn-agregar-producto {
   background: #FFCA2B;
   border: none;
@@ -132,67 +132,91 @@
   transform: scale(0.95);
 }
 
+/* Grid y card */
+.category-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 0 12px;
+}
+
+.category-grid > div {
+  width: calc((100% - 48px) / 3); /* ✅ 3 cards por fila con 2 gaps */
+}
+
+@media (max-width: 992px) {
+  .category-grid > div {
+    width: calc((100% - 24px) / 2); /* ✅ 2 cards por fila */
+  }
+}
+
+@media (max-width: 576px) {
+  .category-grid > div {
+    width: 100%; /* ✅ 1 card por fila */
+  }
+}
+
 .product-card {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid #dee2e6;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  border-radius: 14px;
+  background: white;
+}
+
+.product-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
 }
 
 .product-card .card-img-top {
-  height: 200px;
+  height: 180px;
   object-fit: cover;
   transition: transform 0.3s ease;
 }
 
 .product-card:hover .card-img-top {
-  transform: scale(1.08);
+  transform: scale(1.05);
 }
 
 .product-card .card-body {
-  padding: 16px;
+  padding: 25px;
 }
 
 .product-card .card-title {
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: #1a1a1a;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   line-height: 1.3;
 }
 
 .product-card .text-muted {
-  font-size: 0.875rem;
-  color: #6c757d;
-  margin-bottom: 12px;
+  flex-grow: 1;
+  font-size: 0.9rem;
   line-height: 1.4;
+  margin-bottom: 10px;
 }
 
 .product-card .price {
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: 1.2rem;
+  font-weight: 800;
   color: #FFCA2B;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
-/* Botones de editar y eliminar */
+/* Botones */
 .btn-editar {
   background: #FFCA2B;
   border: none;
   color: white;
   font-weight: 600;
   padding: 10px 12px;
-  transition: all 0.3s ease;
   border-radius: 6px;
   font-size: 0.9rem;
-}
-
-.btn-editar:hover {
-  background: #e9b525;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 202, 43, 0.3);
-  color: white;
 }
 
 .btn-eliminar {
@@ -201,21 +225,18 @@
   color: white;
   font-weight: 600;
   padding: 10px 12px;
-  transition: all 0.3s ease;
   border-radius: 6px;
   font-size: 0.9rem;
+}
+
+.btn-editar:hover {
+  background: #e9b525;
+  transform: translateY(-2px);
 }
 
 .btn-eliminar:hover {
   background: #5c4d21;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(124, 102, 42, 0.3);
-  color: white;
-}
-
-.btn-editar:active,
-.btn-eliminar:active {
-  transform: translateY(0);
 }
 
 /* Modal overlay */
@@ -237,69 +258,3 @@
   position: relative;
   z-index: 10000;
 }
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .categoria-carousel {
-    gap: 8px;
-  }
-
-  .categoria-container {
-    gap: 12px;
-  }
-
-  .categoria-img {
-    width: 60px;
-    height: 60px;
-  }
-
-  .arrow-btn {
-    width: 36px;
-    height: 36px;
-    font-size: 1.2rem;
-  }
-
-  .categoria-heading {
-    font-size: 1.25rem;
-  }
-
-  .btn-agregar-producto {
-    width: 40px;
-    height: 40px;
-    font-size: 1.3rem;
-  }
-
-  .product-card .card-img-top {
-    height: 160px;
-  }
-}
-
-@media (max-width: 576px) {
-  .categoria-carousel {
-    padding: 16px 0;
-  }
-
-  .categoria-item p {
-    font-size: 0.75rem;
-  }
-
-  .category-grid {
-    gap: 12px;
-  }
-
-  .btn-editar,
-  .btn-eliminar {
-    font-size: 0.85rem;
-    padding: 8px 10px;
-  }
-}
-

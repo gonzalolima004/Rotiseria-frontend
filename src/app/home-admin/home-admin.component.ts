@@ -47,30 +47,5 @@ export class HomeAdminComponent {
   refrescarLista() {
     this.lista?.cargarProductos();
   }
-
-  // 👇 SOLO AGREGUÉ ESTE MÉTODO
-  cerrarSesion() {
-    Swal.fire({
-      title: '¿Cerrar sesión?',
-      text: '¿Estás seguro de que deseas salir?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#7C662A',
-      cancelButtonColor: '#FFCA2B',
-      confirmButtonText: 'Sí, cerrar sesión',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.authService.logout();
-        this.router.navigate(['/home-usuarios']);
-        Swal.fire({
-          icon: 'success',
-          title: 'Sesión cerrada',
-          text: '¡Hasta pronto!',
-          showConfirmButton: false,
-          timer: 1500
-        });
-      }
-    });
-  }
-}
+ }
+  

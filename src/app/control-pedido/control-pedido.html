@@ -1,17 +1,8 @@
-<app-header></app-header>
-
 <div class="contenedor-historial">
   <div class="titulo-con-flechas">
     <button class="flecha" (click)="anteriorPagina()">&#10094;</button>
     <h2>Control de Pedidos</h2>
     <button class="flecha" (click)="siguientePagina()">&#10095;</button>
-  </div>
-
-  <div class="acciones">
-    <button class="btn-dashboard" (click)="abrirDashboard()">
-      <span class="icono-dashboard">📊</span>
-      Resumen
-    </button>
   </div>
 
   <div *ngIf="cargando()" class="cargando">
@@ -114,11 +105,3 @@
     <p>No hay pedidos confirmados o entregados.</p>
   </div>
 </div>
-
-<!-- MODAL DASHBOARD -->
-<app-dashboard-pedidos
-  *ngIf="modalDashboardVisible()"
-  [pedidos]="pedidos()"
-  (cerrar)="cerrarDashboard()"
-  (filtrosAplicados)="aplicarFiltrosDesdeModal($event)">
-</app-dashboard-pedidos>

@@ -17,7 +17,6 @@ export class ProductosListaAdminComponent implements OnInit {
   productos: any[] = [];
   @ViewChild('carousel', { static: false }) carousel!: ElementRef;
 
-  // Variables para el modal
   mostrarModal = false;
   modoEdicion = false;
   productoIdSeleccionado: number | null = null;
@@ -51,21 +50,18 @@ export class ProductosListaAdminComponent implements OnInit {
     this.agregar.emit(producto);
   }
 
-  // Abrir modal para crear producto
   abrirModalCrear() {
     this.modoEdicion = false;
     this.productoIdSeleccionado = null;
     this.mostrarModal = true;
   }
 
-  // Abrir modal para editar producto
   editarProducto(producto: any) {
     this.modoEdicion = true;
     this.productoIdSeleccionado = producto.id_producto;
     this.mostrarModal = true;
   }
 
-  // Eliminar producto
   eliminarProducto(producto: any) {
     Swal.fire({
       title: '¿Estás seguro?',
@@ -84,9 +80,11 @@ export class ProductosListaAdminComponent implements OnInit {
               icon: 'success',
               title: 'Producto eliminado',
               showConfirmButton: false,
-              timer: 1500
+              timer: 1200
+            }).then(() => {
+              this.cargarProductos();
+                location.reload();
             });
-            this.cargarProductos();
           },
           error: (err) => {
             Swal.fire({
@@ -101,24 +99,25 @@ export class ProductosListaAdminComponent implements OnInit {
     });
   }
 
-  // Cerrar modal y recargar productos
   cerrarModal(evento: string) {
     this.mostrarModal = false;
+
     if (evento === 'ok') {
-      this.cargarProductos();
+      setTimeout(() => {
+        this.cargarProductos();
+      }, 100);
     }
   }
 
   scrollLeft() {
-  const carousel = document.querySelector('.categoria-container') as HTMLElement;
-  carousel.scrollBy({ left: -200, behavior: 'smooth' });
-}
+    const carousel = document.querySelector('.categoria-container') as HTMLElement;
+    carousel.scrollBy({ left: -200, behavior: 'smooth' });
+  }
 
-scrollRight() {
-  const carousel = document.querySelector('.categoria-container') as HTMLElement;
-  carousel.scrollBy({ left: 200, behavior: 'smooth' });
-}
-
+  scrollRight() {
+    const carousel = document.querySelector('.categoria-container') as HTMLElement;
+    carousel.scrollBy({ left: 200, behavior: 'smooth' });
+  }
 
   scrollToCategoria(id: number) {
     const element = document.getElementById('cat-' + id);
@@ -126,10 +125,4 @@ scrollRight() {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
-
-
-
 }
-  
-
-

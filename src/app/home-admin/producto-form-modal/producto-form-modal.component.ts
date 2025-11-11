@@ -81,7 +81,7 @@ export class ProductoFormModal implements OnInit, OnChanges {
         title: 'Completa los campos requeridos',
         text: 'El nombre, precio y categoría son obligatorios.',
         confirmButtonColor: '#FFCA2B'
-      });
+      }); 
       return;
     }
 
@@ -117,6 +117,9 @@ export class ProductoFormModal implements OnInit, OnChanges {
           timer: 1500
         });
         this.cerrar.emit('ok');
+      
+          location.reload();
+
       },
       error: (err) => {
         Swal.fire({
