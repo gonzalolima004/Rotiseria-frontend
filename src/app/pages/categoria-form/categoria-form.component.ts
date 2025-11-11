@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { CategoriaService } from '../../services/categoria-service';
+import { CategoriaService } from '../../services/categoria.service';
 
 @Component({
   selector: 'app-categoria-form',

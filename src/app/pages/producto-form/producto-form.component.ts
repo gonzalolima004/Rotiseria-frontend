@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { ProductoService } from '../../services/producto-service';
+import { ProductoService } from '../../services/producto.service';
 
 @Component({
   selector: 'app-producto-form',

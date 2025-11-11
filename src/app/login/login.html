@@ -1,5 +1,5 @@
 <div class="container d-flex align-items-center justify-content-center min-vh-100">
-  <div class="card shadow p-4" style="max-width: 400px; width: 100%;">
+  <div class="card shadow p-4 border-1" style="max-width: 400px; width: 100%;">
     <h3 class="text-center mb-4">Iniciar Sesión</h3>
 
     <form #loginForm="ngForm" (ngSubmit)="login(loginForm)">
@@ -45,7 +45,7 @@
 
       <button
         type="submit"
-        class="btn btn-primary w-100"
+        class="btn btn-outline-warning w-100"
         [disabled]="loading"
       >
         <span *ngIf="!loading">Ingresar</span>

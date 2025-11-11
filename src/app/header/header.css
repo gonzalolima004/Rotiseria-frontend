@@ -1,45 +1,259 @@
+.hero-section {
+  position: relative;
+  overflow: hidden;
+  margin-top: -150px; /* Ajusta según la altura de tu header */
+  z-index: 1;
+}
+
+.hero-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  max-height: 500px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.hero-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.3), transparent);
+  pointer-events: none;
+}
+
+/* Header con fondo traslúcido */
 .header-top {
-            background-color: #FFFCBE;
-            padding: 10px 0;
-            border-bottom: 2px solid #e6e3a8;
-        }
-        
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .logo-img {
-            width: 60px;
-            height: 60px;
-            object-fit: contain;
-        }
-        
-        .brand-name {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #FFA500;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-            margin: 0;
-            font-family: 'Arial Black', sans-serif;
-            letter-spacing: 2px;
-        }
-        
-        .contact-info {
-            font-size: 0.9rem;
-            color: #333;
-            margin: 0;
-        }
-        
-        .social-media {
-            font-size: 0.9rem;
-            color: #333;
-            text-align: right;
-        }
-        
-        .hero-image {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
+  background: rgba(247, 225, 165, 0.85); /* Fondo traslúcido */
+  backdrop-filter: blur(8px); /* Efecto de desenfoque del fondo */
+  -webkit-backdrop-filter: blur(8px); /* Safari */
+  padding: 15px 0;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  position: relative;
+  z-index: 10; /* Asegura que esté encima del hero */
+}
+
+.header-divider {
+  height: 3px;
+  background: linear-gradient(90deg, 
+    rgba(255, 165, 0, 0) 0%, 
+    rgba(255, 165, 0, 0.4) 20%,
+    rgba(255, 165, 0, 0.7) 50%,
+    rgba(255, 165, 0, 0.4) 80%,
+    rgba(255, 165, 0, 0) 100%
+  );
+  margin-top: 10px;
+}
+
+/* Logo */
+.logo-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
+  transition: transform 0.3s ease;
+}
+
+.logo-img:hover {
+  transform: scale(1.05) rotate(5deg);
+}
+
+/* Marca Central */
+.brand-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+}
+
+.brand-name {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: transparent;
+  -webkit-text-stroke: 1.5px #ff8c00;
+  text-stroke: 1.5px #ff8c00;
+  margin: 0;
+  font-family: "Impact", "Arial Black", sans-serif;
+  letter-spacing: 6px;
+  line-height: 1;
+  text-transform: uppercase;
+  filter: drop-shadow(3px 3px 1px rgba(255, 140, 0, 0.3));
+}
+
+.brand-tagline {
+  font-size: 0.8rem;
+  color: #ff8c00;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Información de Contacto */
+.info-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: flex-end;
+}
+
+.contact-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #333;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+.contact-icon {
+  width: 18px;
+  height: 18px;
+  color: #ff8c00;
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+/* Redes Sociales */
+.social-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.social-label {
+  font-size: 0.85rem;
+  color: #555;
+  font-weight: 600;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+.social-icons {
+  display: flex;
+  gap: 10px;
+}
+
+.social-link {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  color: #ff8c00;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+}
+
+.social-link:hover {
+  background: #ff8c00;
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(255, 140, 0, 0.4);
+}
+
+.social-link svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .hero-section {
+    margin-top: -120px;
+  }
+
+  .hero-image {
+    max-height: 350px;
+  }
+  
+  .brand-name {
+    font-size: 2.5rem;
+    -webkit-text-stroke: 1.2px #ff8c00;
+    letter-spacing: 4px;
+  }
+  
+  .brand-tagline {
+    font-size: 0.7rem;
+  }
+
+  .logo-img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .info-wrapper {
+    align-items: center;
+    text-align: center;
+  }
+
+  .contact-item {
+    font-size: 0.85rem;
+    justify-content: center;
+  }
+
+  .social-group {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .social-link {
+    width: 32px;
+    height: 32px;
+  }
+
+  .social-link svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-section {
+    margin-top: -100px;
+  }
+
+  .hero-image {
+    max-height: 250px;
+  }
+
+  .header-top {
+    padding: 12px 0;
+  }
+
+  .brand-name {
+    font-size: 1.8rem;
+    letter-spacing: 3px;
+    -webkit-text-stroke: 1px #ff8c00;
+  }
+
+  .contact-item {
+    font-size: 0.8rem;
+  }
+
+  .contact-icon {
+    width: 16px;
+    height: 16px;
+  }
+}
