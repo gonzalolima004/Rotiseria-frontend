@@ -1,0 +1,112 @@
+<app-header></app-header>
+
+<div class="contenedor-historial">
+  <div class="titulo-con-flechas">
+    <button class="flecha" (click)="anteriorPagina()">&#10094;</button>
+    <h2>Historial de Pedidos</h2>
+    <button class="flecha" (click)="siguientePagina()">&#10095;</button>
+  </div>
+
+  <div class="acciones">
+    <button class="btn-filtrar" (click)="abrirModal()">
+      <span class="icono-filtro">⚙</span>
+      Filtrar por fecha
+    </button>
+  </div>
+
+  <div *ngIf="cargando()" class="cargando">
+    <div class="spinner"></div>
+    <p>Cargando pedidos...</p>
+  </div>
+
+  <div class="tabla-wrapper" *ngIf="!cargando() && pedidosPaginados().length > 0">
+    <table class="tabla-pedidos">
+      <thead>
+        <tr>
+          <th>Número / Fecha</th>
+          <th>Datos del Cliente</th>
+          <th>Detalle del Pedido</th>
+          <th>Total</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pedido of pedidosPaginados()" class="fila-pedido">
+          <td>
+            <div class="numero-pedido">#{{ pedido.id_pedido }}</div>
+            <div class="fecha-pedido">{{ formatearFecha(pedido.fecha_hora) }}</div>
+          </td>
+
+          <td>
+            <div class="nombre-cliente">{{ pedido.cliente.nombre_cliente }}</div>
+            <div class="info-cliente">📞 {{ pedido.cliente.telefono_cliente }}</div>
+            <div class="info-cliente">📍 {{ pedido.cliente.direccion_cliente }}</div>
+          </td>
+
+          <td>
+            <div *ngIf="pedido.detalles && pedido.detalles.length > 0; else sinDetalles">
+              <div *ngFor="let det of pedido.detalles" class="detalle-item">
+                <div class="detalle-linea">
+                  <span class="detalle-label">Producto:</span>
+                  <span class="detalle-valor">{{ det.id_producto }}</span>
+                </div>
+                <div class="detalle-linea">
+                  <span class="detalle-label">Cantidad:</span>
+                  <span class="detalle-valor">{{ det.cantidad }}</span>
+                </div>
+                <div class="detalle-linea">
+                  <span class="detalle-label">Subtotal:</span>
+                  <span class="detalle-precio">{{ det.subtotal | currency:'ARS':'symbol-narrow' }}</span>
+                </div>
+              </div>
+            </div>
+            <ng-template #sinDetalles>
+              <div class="sin-datos-detalle">Sin detalles</div>
+            </ng-template>
+          </td>
+
+          <td>
+            <div class="total">{{ pedido.monto_total | currency:'ARS':'symbol-narrow' }}</div>
+          </td>
+          <td>
+            <span class="badge-estado">{{ pedido.estado.nombre_estado_pedido }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="!cargando() && pedidosPaginados().length === 0" class="sin-datos">
+    <div class="sin-datos-icono">📦</div>
+    <p>No hay pedidos registrados.</p>
+  </div>
+</div>
+
+<!-- Modal mejorado -->
+<div class="modal-container" *ngIf="mostrarModal()">
+  <div class="modal-backdrop" (click)="cerrarModal()"></div>
+
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Filtrar por fecha</h3>
+      <button class="btn-cerrar-x" (click)="cerrarModal()">✕</button>
+    </div>
+
+    <div class="modal-content">
+      <div class="input-group">
+        <label>Desde:</label>
+        <input type="date" [(ngModel)]="fechaDesde" />
+      </div>
+
+      <div class="input-group">
+        <label>Hasta:</label>
+        <input type="date" [(ngModel)]="fechaHasta" />
+      </div>
+    </div>
+
+    <div class="modal-buttons">
+      <button class="btn-aplicar" (click)="aplicarFiltro()">Aplicar Filtro</button>
+      <button class="btn-cancelar" (click)="cerrarModal()">Cancelar</button>
+    </div>
+  </div>
+</div>

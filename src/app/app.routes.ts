@@ -3,11 +3,12 @@ import { Routes } from '@angular/router';
 // 🧩 Componentes
 import { Login } from './login/login';
 import { HomeUsuariosComponent } from './home-usuarios/home-usuarios.component';
-import { HomeAdmin } from './home-admin/home-admin';
+import { HomeAdminComponent } from './home-admin/home-admin.component';
 import { ProductoFormComponent } from './pages/producto-form/producto-form.component';
 import { ListaProductosComponent } from './pages/lista-productos/lista-productos.component';
 import { CategoriaFormComponent } from './pages/categoria-form/categoria-form.component';
 import { CategoriaListComponent } from './pages/categoria-list/categoria-list.component';
+import { HistorialPedidoComponent } from './historial-pedido/historial-pedido';
 import { ForgotPasswordComponent } from './login/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './login/reset-password/reset-password.component';
 
@@ -20,11 +21,13 @@ import { ReporteVentasComponent } from './reporte-ventas/reporte-ventas';
 export const routes: Routes = [
     { path: '', component: HomeUsuariosComponent },
     { path: 'ingresar', component: Login },
-    { path: 'admin', component: HomeAdmin, canActivate: [AuthGuard] },
+    { path: 'admin', component: HomeAdminComponent, canActivate: [AuthGuard] },
     { path: 'productos', component: ProductoFormComponent, canActivate: [AuthGuard] },
     { path: 'lista-productos', component: ListaProductosComponent, canActivate: [AuthGuard] },
     { path: 'categorias', component: CategoriaFormComponent, canActivate: [AuthGuard] },
     { path: 'lista-categorias', component: CategoriaListComponent, canActivate: [AuthGuard] },
+    { path: 'historial-pedido', component: HistorialPedidoComponent, canActivate: [AuthGuard] },
+    
     { path: 'forgot-password', component: ForgotPasswordComponent },
     { path: 'reset-password', component: ResetPasswordComponent },
     { path: 'reporte-ventas', component: ReporteVentasComponent, canActivate: [AuthGuard] },
