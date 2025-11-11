@@ -51,7 +51,7 @@ export class Login {
         this.loading = false;
         this.cdr.markForCheck();
 
-        this.router.navigate(['/admin']);
+        this.router.navigate(['/productos-y-categorias']);
       },
       error: async (error) => {
         this.loading = false;

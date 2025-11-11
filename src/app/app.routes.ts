@@ -13,12 +13,12 @@ import { ReporteVentasComponent } from './reporte-ventas/reporte-ventas';
 export const routes: Routes = [
     { path: '', component: HomeUsuariosComponent },
     { path: 'ingresar', component: Login },
-    { path: 'admin', component: HomeAdminComponent, canActivate: [AuthGuard] },
-    { path: 'control-pedido', component: ControlPedidoComponent, canActivate: [AuthGuard] },
+    { path: 'productos-y-categorias', component: HomeAdminComponent, canActivate: [AuthGuard] },
+    { path: 'control-de-pedidos', component: ControlPedidoComponent, canActivate: [AuthGuard] },
     { path: 'forgot-password', component: ForgotPasswordComponent },
     { path: 'reset-password', component: ResetPasswordComponent },
-    { path: 'reporte-ventas', component: ReporteVentasComponent, canActivate: [AuthGuard] },
-    { path: 'pedidos', component: PedidosPendientesComponent, canActivate: [AuthGuard] }, 
+    { path: 'reporte-de-ventas', component: ReporteVentasComponent, canActivate: [AuthGuard] },
+    { path: 'pedidos-entrantes', component: PedidosPendientesComponent, canActivate: [AuthGuard] }, 
 
 
   { path: '**', redirectTo: '' },
