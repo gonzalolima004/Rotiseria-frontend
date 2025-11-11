@@ -8,6 +8,9 @@ import { ProductoFormComponent } from './pages/producto-form/producto-form.compo
 import { ListaProductosComponent } from './pages/lista-productos/lista-productos.component';
 import { CategoriaFormComponent } from './pages/categoria-form/categoria-form.component';
 import { CategoriaListComponent } from './pages/categoria-list/categoria-list.component';
+import { ForgotPasswordComponent } from './login/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './login/reset-password/reset-password.component';
+
 import { PedidosPendientesComponent } from './pages/pedidos-pendientes/pedidos-pendientes.component';
 import { AuthGuard } from './services/auth-guard';
 
@@ -22,6 +25,8 @@ export const routes: Routes = [
     { path: 'lista-productos', component: ListaProductosComponent, canActivate: [AuthGuard] },
     { path: 'categorias', component: CategoriaFormComponent, canActivate: [AuthGuard] },
     { path: 'lista-categorias', component: CategoriaListComponent, canActivate: [AuthGuard] },
+    { path: 'forgot-password', component: ForgotPasswordComponent },
+    { path: 'reset-password', component: ResetPasswordComponent },
     { path: 'reporte-ventas', component: ReporteVentasComponent, canActivate: [AuthGuard] },
     { path: 'pedidos', component: PedidosPendientesComponent, canActivate: [AuthGuard] }, 
 
