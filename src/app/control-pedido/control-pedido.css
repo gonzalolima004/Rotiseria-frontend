@@ -1,5 +1,4 @@
 /* Fondo blanco principal con diseño moderno y limpio */
-
 .contenedor-historial {
   background-color: #ffffff;
   border: 2px solid #ffca2b;
@@ -60,38 +59,61 @@ h2 {
   transform: scale(0.95);
 }
 
-/* Botón de filtrar mejorado con icono */
-.acciones {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 20px;
-}
-
-.btn-filtrar {
-  background-color: #ffca2b;
-  border: 2px solid #ffca2b;
-  color: #7c662a;
-  padding: 12px 24px;
+/* Botón Completar */
+.btn-completar {
+  background-color: #28a745;
+  border: 2px solid #28a745;
+  color: white;
+  padding: 8px 16px;
   font-weight: 600;
-  font-size: 0.95rem;
-  border-radius: 10px;
+  font-size: 0.9rem;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  box-shadow: 0 2px 6px rgba(255, 202, 43, 0.3);
+  gap: 4px;
+  margin-right: 8px;
 }
 
-.btn-filtrar:hover {
-  background-color: #7c662a;
-  color: #ffca2b;
+.btn-completar:hover {
+  background-color: #218838;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(124, 102, 42, 0.3);
+  box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
 }
 
-.icono-filtro {
-  font-size: 1.1rem;
+/* Botón Rechazar */
+.btn-rechazar {
+  background-color: #dc3545;
+  border: 2px solid #dc3545;
+  color: white;
+  padding: 8px 16px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-rechazar:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
+}
+
+.texto-completado {
+  color: #28a745;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.texto-rechazado {
+  color: #dc3545;
+  font-weight: 600;
+  font-size: 0.95rem;
 }
 
 /* Estado de carga mejorado con spinner */
@@ -116,12 +138,8 @@ h2 {
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .sin-datos {
@@ -265,15 +283,36 @@ h2 {
 /* Badge para estado con diseño moderno */
 .badge-estado {
   display: inline-block;
-  background-color: #ffca2b;
-  color: #7c662a;
   padding: 8px 16px;
   border-radius: 20px;
   font-weight: 700;
   font-size: 0.85rem;
   text-transform: capitalize;
-  border: 2px solid #ffd84d;
-  box-shadow: 0 2px 4px rgba(255, 202, 43, 0.2);
+  border: 2px solid;
+}
+
+.estado-confirmado {
+  background-color: #cfe2ff;
+  color: #084298;
+  border-color: #9ec5fe;
+}
+
+.estado-completado {
+  background-color: #d1e7dd;
+  color: #0f5132;
+  border-color: #a3cfbb;
+}
+
+.estado-rechazado {
+  background-color: #f8d7da;
+  color: #842029;
+  border-color: #f1aeb5;
+}
+
+.estado-default {
+  background-color: #e9ecef;
+  color: #495057;
+  border-color: #dee2e6;
 }
 
 .total {
@@ -281,184 +320,6 @@ h2 {
   font-size: 1.2rem;
   color: #7c662a;
   text-align: right;
-}
-
-/* Modal completamente rediseñado */
-.modal-container {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 99999;
-  animation: fadeIn 0.3s ease;
-}
-
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
-  z-index: 99998;
-}
-
-.modal {
-  position: relative;
-  background: #ffffff;
-  border: 3px solid #ffca2b;
-  border-radius: 16px;
-  padding: 0;
-  width: 420px;
-  max-width: 90vw;
-  color: #7c662a;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  z-index: 999999;
-  animation: slideIn 0.3s ease-out;
-  overflow: hidden;
-}
-
-.modal-header {
-  background: linear-gradient(135deg, #ffca2b 0%, #ffd84d 100%);
-  padding: 20px 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 2px solid #7c662a;
-}
-
-.modal-header h3 {
-  margin: 0;
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #7c662a;
-}
-
-.btn-cerrar-x {
-  background: rgba(255, 255, 255, 0.3);
-  border: 2px solid #7c662a;
-  color: #7c662a;
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  font-size: 1.5rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  line-height: 1;
-}
-
-.btn-cerrar-x:hover {
-  background: #7c662a;
-  color: #ffffff;
-  transform: rotate(90deg);
-}
-
-.modal-content {
-  padding: 28px 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.input-group label {
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: #7c662a;
-}
-
-.modal-content input {
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 12px 14px;
-  font-size: 1rem;
-  background-color: #fafafa;
-  color: #7c662a;
-  transition: all 0.2s ease;
-  font-family: inherit;
-}
-
-.modal-content input:focus {
-  outline: none;
-  border-color: #ffca2b;
-  background-color: #ffffff;
-  box-shadow: 0 0 0 3px rgba(255, 202, 43, 0.15);
-}
-
-.modal-buttons {
-  display: flex;
-  gap: 12px;
-  padding: 20px 24px;
-  background-color: #fafafa;
-  border-top: 1px solid #e0e0e0;
-}
-
-.btn-aplicar {
-  flex: 1;
-  background-color: #ffca2b;
-  color: #7c662a;
-  border: 2px solid #ffca2b;
-  padding: 12px 20px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 700;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 6px rgba(255, 202, 43, 0.3);
-}
-
-.btn-aplicar:hover {
-  background-color: #7c662a;
-  border-color: #7c662a;
-  color: #ffca2b;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(124, 102, 42, 0.3);
-}
-
-.btn-cancelar {
-  flex: 1;
-  background-color: #ffffff;
-  border: 2px solid #d0d0d0;
-  color: #7c662a;
-  padding: 12px 20px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 1rem;
-  transition: all 0.2s ease;
-}
-
-.btn-cancelar:hover {
-  background-color: #f5f5f5;
-  border-color: #7c662a;
-}
-
-/* Animaciones */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideIn {
-  from {
-    transform: translateY(-30px) scale(0.95);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
 }
 
 /* Responsive */
@@ -478,7 +339,10 @@ h2 {
     font-size: 0.85rem;
   }
 
-  .modal {
-    width: 95vw;
+  .btn-completar,
+  .btn-rechazar {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    margin-bottom: 4px;
   }
 }

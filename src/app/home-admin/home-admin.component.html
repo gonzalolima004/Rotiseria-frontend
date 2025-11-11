@@ -1,6 +1,13 @@
 <app-header-admin></app-header-admin>
 
+
 <div class="container-fluid py-4 d-flex justify-content-center">
+  <div class="row w-100" style="max-width: 1200px;">
+    <div class="col-lg-8 mb-3">
+      <app-productos-lista-admin
+        (crearProducto)="abrirCrearProducto()"
+        (editarProducto)="abrirEditarProducto($event)">
+      </app-productos-lista-admin>
   <div class="row w-100" style="max-width: 1400px; align-items: flex-start">
     <!-- izquierda → categorías + productos -->
     <div class="col-lg-9 mb-3">
@@ -10,3 +17,11 @@
    
   </div>
 </div>
+
+<!-- Modal de crear/editar producto -->
+<app-producto-form-modal
+  *ngIf="modalVisible"
+  [modoEdicion]="modalMode === 'edit'"
+  [productoId]="productoSeleccionado?.id_producto"
+  (cerrar)="cerrarModal()">
+</app-producto-form-modal>

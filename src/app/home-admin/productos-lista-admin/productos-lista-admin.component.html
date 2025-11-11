@@ -53,15 +53,18 @@
 
 <div class="products-main-content">
     <div *ngFor="let cat of categorias" class="categoria-section">
-      <h5 id="cat-{{ cat.id_categoria }}" class="categoria-heading">
-        {{ cat.nombre_categoria }}
-      </h5>
+      <div class="categoria-header">
+        <h5 id="cat-{{ cat.id_categoria }}" class="categoria-heading">
+          {{ cat.nombre_categoria }}
+        </h5>
 
-      <div class="row g-4 category-grid">
-        <div
-          class="col-12 col-sm-6 col-md-4 col-lg-4"
-          *ngFor="let prod of filtrarProductosPorCategoria(cat.id_categoria)"
-        >
+        <button class="btn-agregar-producto" (click)="abrirModalCrear()">
+          <i class="bi bi-plus"></i>
+        </button>
+      </div>
+
+      <div class="category-grid">
+        <div *ngFor="let prod of filtrarProductosPorCategoria(cat.id_categoria)">
           <div class="card h-100 product-card shadow-sm">
             <div class="position-relative overflow-hidden">
               <img
@@ -80,18 +83,33 @@
               <p class="text-muted small flex-grow-1">
                 {{ prod.descripcion_producto }}
               </p>
-              <p class="price mb-3">$ {{ prod.precio_producto }}</p>
-              <button 
-                class="btn btn-add w-100" 
-                (click)="agregarProducto(prod)"
-                type="button"
-              >
-                <i class="bi bi-cart-plus me-2"></i> Agregar
-              </button>
+              <p class="price">$ {{ prod.precio_producto }}</p>
+
+              <div class="d-flex gap-2">
+                <button class="btn btn-editar flex-fill" (click)="editarProducto(prod)">
+                  <i class="bi bi-pencil-square"></i> Editar
+                </button>
+                <button class="btn btn-eliminar flex-fill" (click)="eliminarProducto(prod)">
+                  <i class="bi bi-trash3"></i> Eliminar
+                </button>
+              </div>
             </div>
+
           </div>
         </div>
       </div>
+
     </div>
+  </div>
+</div>
+
+<!-- Modal para crear/editar producto -->
+<div class="modal-overlay" *ngIf="mostrarModal" (click)="cerrarModal('cancel')">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <app-producto-form-modal
+      [modoEdicion]="modoEdicion"
+      [productoId]="productoIdSeleccionado"
+      (cerrar)="cerrarModal($event)"
+    ></app-producto-form-modal>
   </div>
 </div>
