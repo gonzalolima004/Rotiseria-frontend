@@ -25,27 +25,22 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<any> {
-    return this.http
-      .post<{ access_token: string }>(`${this.apiUrl}/login`, { email, password })
-      .pipe(
-        tap((res) => {
-          const raw =
-            (res as any)?.access_token ??
-            (res as any)?.token ??
-            (res as any)?.accessToken ??
-            (res as any)?.data?.access_token;
+  return this.http
+    .post<{ token: string }>(`${this.apiUrl}/login`, { email, password })
+    .pipe(
+      tap((res) => {
+        const token = res?.token;
+        if (token && isPlatformBrowser(this.platformId)) {
+          localStorage.setItem('token', token.trim());
+          this.isLoggedIn.set(true);
+          console.log('✅ Token guardado en localStorage:', token);
+        } else {
+          console.warn('⚠️ No se recibió token válido del backend.');
+        }
+      })
+    );
+}
 
-          if (raw && isPlatformBrowser(this.platformId)) {
-            const token = String(raw)
-              .replace(/^\"|\"$/g, '')
-              .replace(/^Bearer\s+/i, '')
-              .trim();
-            localStorage.setItem('token', token);
-            this.isLoggedIn.set(true);
-          }
-        })
-      );
-  }
 
   getToken(): string | null {
     if (isPlatformBrowser(this.platformId)) {

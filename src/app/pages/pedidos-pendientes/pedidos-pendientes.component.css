@@ -1,0 +1,316 @@
+/* === FONDO GENERAL === */
+.body {
+  background-color: #ffffff; /* Fondo blanco */
+  margin: 0;
+  min-height: 100vh;
+}
+
+/* === CONTENEDOR PRINCIPAL === */
+.contenedor-pedidos {
+  background-color: #ffffff;
+  padding: 20px;
+  color: #7c662a;
+  font-family: "Arial", sans-serif;
+  max-width: 1200px;
+  margin: 40px auto;
+  box-shadow: 0 0 12px #ffca2b;
+  border: 2px solid #ffca2b;
+  border-radius: 10px;
+}
+
+/* --- TÍTULO Y CONTADOR --- */
+.titulo-con-flechas {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffca2b;
+  border-radius: 8px;
+  padding: 15px 20px;
+  margin-bottom: 25px;
+  border: 2px solid #7c662a;
+}
+
+h2 {
+  font-weight: 700;
+  text-align: center;
+  color: #7c662a;
+  flex: 1;
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.flecha {
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: #7c662a;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+.flecha:hover {
+  color: #5a4e1d;
+  transform: scale(1.2);
+}
+
+.contador-badge {
+  background-color: #fff4a5;
+  border: 2px solid #7c662a;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: bold;
+  color: #7c662a;
+}
+
+/* --- ESTADO CARGANDO --- */
+.cargando {
+  text-align: center;
+  font-weight: bold;
+  margin: 20px 0;
+}
+.spinner {
+  border: 4px solid #f3eaa1;
+  border-top: 4px solid #7c662a;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  margin: 0 auto 10px;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* === TABLA === */
+.tabla-wrapper {
+  overflow-x: auto;
+}
+
+.tabla-pedidos {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+}
+
+/* Encabezado */
+.tabla-pedidos thead {
+  display: table-header-group;
+  background-color: #ffca2b;
+}
+
+.tabla-pedidos th {
+  background-color: #ffca2b;
+  color: #7c662a;
+  border: 2px solid #7c662a;
+  padding: 12px;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+/* Cuerpo */
+.tabla-pedidos tbody {
+  display: table-row-group;
+}
+
+.fila-pedido {
+  display: table-row;
+  transition: background-color 0.3s ease, opacity 0.4s ease;
+}
+.fila-pedido:hover {
+  background-color: #fff9c4;
+  box-shadow: 0 4px 12px rgba(124, 102, 42, 0.25);
+}
+
+/* Celdas */
+.tabla-pedidos td {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  border: 1px solid #c7b55c;
+  padding: 12px;
+  font-size: 0.9rem;
+}
+
+.tabla-pedidos td:nth-child(2),
+.tabla-pedidos td:nth-child(3) {
+  text-align: left;
+  vertical-align: top;
+}
+
+/* --- NÚMERO Y FECHA --- */
+.numero-pedido {
+  font-weight: bold;
+  font-size: 0.95rem;
+  color: #7c662a;
+  margin-bottom: 5px;
+  text-align: center;
+}
+.fecha-pedido {
+  font-size: 0.85rem;
+  color: #8a7a3a;
+  text-align: center;
+}
+
+/* --- CLIENTE --- */
+.nombre-cliente {
+  font-weight: bold;
+  color: #7c662a;
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+}
+.info-cliente {
+  font-size: 0.85rem;
+  color: #8a7a3a;
+  margin-bottom: 4px;
+}
+
+/* --- DETALLES --- */
+.detalle-item {
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed #c7b55c;
+}
+.detalle-item:last-child {
+  border-bottom: none;
+}
+.detalle-linea {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  margin-bottom: 3px;
+}
+.detalle-label {
+  font-weight: bold;
+  color: #7c662a;
+}
+.detalle-valor {
+  color: #8a7a3a;
+}
+.detalle-precio {
+  font-weight: bold;
+  color: #5a4e1d;
+}
+.sin-datos-detalle {
+  font-size: 0.85rem;
+  color: #8a7a3a;
+  font-style: italic;
+}
+
+/* === MODALIDAD DE ENTREGA === */
+.modalidad {
+  font-weight: 600;
+  margin-top: 8px;
+  color: #7c662a;
+}
+.envio-precio {
+  color: #d9534f;
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+/* --- TOTAL --- */
+.total {
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: #28a745;
+}
+.total-titulo {
+  display: none; /* Eliminamos el texto “Total:” */
+}
+.total-valor {
+  display: block;
+  font-size: 1.2rem;
+  color: #28a745;
+}
+
+/* --- ACCIONES --- */
+.acciones {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.btn-aprobar,
+.btn-rechazar {
+  border: none;
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+  font-size: 0.85rem;
+  width: 110px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+.btn-aprobar {
+  background-color: #4caf50;
+}
+.btn-aprobar:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+.btn-rechazar {
+  background-color: #d9534f;
+}
+.btn-rechazar:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* --- SIN DATOS --- */
+.sin-datos {
+  text-align: center;
+  margin: 30px 0;
+  font-weight: bold;
+  color: #7c662a;
+  padding: 40px;
+}
+.sin-datos-icono {
+  font-size: 3rem;
+  margin-bottom: 10px;
+  opacity: 0.8;
+}
+
+/* === ANIMACIÓN DE ELIMINACIÓN === */
+.fila-pedido {
+  transition: transform 0.5s ease, opacity 0.5s ease, background-color 0.3s;
+}
+.fila-eliminando {
+  opacity: 0;
+  transform: translateX(60px);
+  background-color: #fff2a8;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 900px) {
+  .tabla-pedidos,
+  .fila-pedido,
+  .tabla-pedidos td {
+    display: block;
+    width: 100%;
+  }
+
+  .tabla-pedidos thead {
+    display: none;
+  }
+
+  .tabla-pedidos td {
+    border-right: none;
+    border-bottom: 1px dashed #c7b55c;
+    text-align: left;
+  }
+
+  .acciones {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
