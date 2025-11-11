@@ -13,8 +13,8 @@
   font-family: "Arial", sans-serif;
   max-width: 1200px;
   margin: 40px auto;
-  box-shadow: 0 0 12px rgba(124, 102, 42, 0.3);
-  border: 2px solid #7c662a;
+  box-shadow: 0 0 12px #ffca2b;
+  border: 2px solid #ffca2b;
   border-radius: 10px;
 }
 
