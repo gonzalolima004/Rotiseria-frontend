@@ -1,29 +1,29 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  if (typeof window === 'undefined' || !window.localStorage) {
-    console.warn('AuthInterceptor: localStorage no disponible (SSR o build).');
-    return next(req);
+  try {
+    // ✅ Solo si estamos en navegador
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const token = localStorage.getItem('token');
+
+      if (token) {
+        const sanitized = token.replace(/^"|"$/g, '').trim();
+
+        const authReq = req.clone({
+          setHeaders: {
+            Authorization: `Bearer ${sanitized}`,
+          },
+        });
+
+        return next(authReq);
+      } else {
+        console.warn('⚠️ AuthInterceptor: No se encontró token en localStorage');
+      }
+    }
+  } catch (err) {
+    console.error('❌ Error en AuthInterceptor:', err);
   }
 
-  const token = localStorage.getItem('token');
-
-  console.debug('AuthInterceptor token (raw):', token);
-
-  if (token) {
-    const sanitizedToken = String(token)
-      .replace(/^\"|\"$/g, '')
-      .replace(/^Bearer\s+/i, '')
-      .trim();
-
-    console.debug('AuthInterceptor token (sanitized):', sanitizedToken);
-
-    const authReq = req.clone({
-      setHeaders: { Authorization: `Bearer ${sanitizedToken}` }
-    });
-
-    return next(authReq);
-  }
-
+  // Si no hay token, continuar la request normal
   return next(req);
 };
