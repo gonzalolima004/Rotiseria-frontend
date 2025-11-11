@@ -1,17 +1,21 @@
+/* === FONDO GENERAL === */
 .body {
-  background-color: #fffeba;
-  margin: 0; 
-  min-height: 100vh; 
+  background-color: #ffffff; /* Fondo blanco */
+  margin: 0;
+  min-height: 100vh;
 }
 
+/* === CONTENEDOR PRINCIPAL === */
 .contenedor-pedidos {
-  background-color: #fffeba;
+  background-color: #ffffff;
   padding: 20px;
   color: #7c662a;
   font-family: "Arial", sans-serif;
   max-width: 1200px;
   margin: 40px auto;
   box-shadow: 0 0 12px rgba(124, 102, 42, 0.3);
+  border: 2px solid #7c662a;
+  border-radius: 10px;
 }
 
 /* --- TÍTULO Y CONTADOR --- */
@@ -32,6 +36,7 @@ h2 {
   color: #7c662a;
   flex: 1;
   font-size: 1.5rem;
+  margin: 0;
 }
 
 .flecha {
@@ -77,56 +82,61 @@ h2 {
   }
 }
 
-/* --- TABLA --- */
+/* === TABLA === */
 .tabla-wrapper {
   overflow-x: auto;
 }
 
 .tabla-pedidos {
+  display: table;
   width: 100%;
   border-collapse: collapse;
-  background-color: #fffeba;
+  background-color: #ffffff;
 }
 
+/* Encabezado */
 .tabla-pedidos thead {
-  display: none;
+  display: table-header-group;
+  background-color: #ffca2b;
 }
 
-/* Cambio de tabla a layout de tarjetas */
+.tabla-pedidos th {
+  background-color: #ffca2b;
+  color: #7c662a;
+  border: 2px solid #7c662a;
+  padding: 12px;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+/* Cuerpo */
 .tabla-pedidos tbody {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+  display: table-row-group;
 }
 
 .fila-pedido {
-  display: grid;
-  grid-template-columns: 150px 1fr 1fr 1fr 180px;
-  gap: 0;
-  background-color: #fffeba;
-  border: 2px solid #7c662a;
-  border-radius: 10px;
-  overflow: hidden;
-  transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease;
-  box-shadow: 0 2px 8px rgba(124, 102, 42, 0.15);
+  display: table-row;
+  transition: background-color 0.3s ease, opacity 0.4s ease;
 }
-
 .fila-pedido:hover {
   background-color: #fff9c4;
   box-shadow: 0 4px 12px rgba(124, 102, 42, 0.25);
 }
 
+/* Celdas */
 .tabla-pedidos td {
-  padding: 15px;
-  vertical-align: top;
-  border-right: 2px dashed #c7b55c;
-  border-top: none;
-  border-bottom: none;
-  border-left: none;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  border: 1px solid #c7b55c;
+  padding: 12px;
+  font-size: 0.9rem;
 }
 
-.tabla-pedidos td:last-child {
-  border-right: none;
+.tabla-pedidos td:nth-child(2),
+.tabla-pedidos td:nth-child(3) {
+  text-align: left;
+  vertical-align: top;
 }
 
 /* --- NÚMERO Y FECHA --- */
@@ -135,11 +145,12 @@ h2 {
   font-size: 0.95rem;
   color: #7c662a;
   margin-bottom: 5px;
+  text-align: center;
 }
-
 .fecha-pedido {
   font-size: 0.85rem;
   color: #8a7a3a;
+  text-align: center;
 }
 
 /* --- CLIENTE --- */
@@ -149,7 +160,6 @@ h2 {
   margin-bottom: 6px;
   font-size: 0.95rem;
 }
-
 .info-cliente {
   font-size: 0.85rem;
   color: #8a7a3a;
@@ -162,72 +172,83 @@ h2 {
   padding-bottom: 8px;
   border-bottom: 1px dashed #c7b55c;
 }
-
 .detalle-item:last-child {
   border-bottom: none;
-  margin-bottom: 0;
-  padding-bottom: 0;
 }
-
 .detalle-linea {
   display: flex;
   justify-content: space-between;
   font-size: 0.85rem;
   margin-bottom: 3px;
 }
-
 .detalle-label {
   font-weight: bold;
   color: #7c662a;
 }
-
 .detalle-valor {
   color: #8a7a3a;
 }
-
 .detalle-precio {
   font-weight: bold;
   color: #5a4e1d;
 }
-
 .sin-datos-detalle {
   font-size: 0.85rem;
   color: #8a7a3a;
   font-style: italic;
 }
 
+/* === MODALIDAD DE ENTREGA === */
+.modalidad {
+  font-weight: 600;
+  margin-top: 8px;
+  color: #7c662a;
+}
+.envio-precio {
+  color: #d9534f;
+  font-weight: bold;
+  margin-left: 5px;
+}
+
 /* --- TOTAL --- */
 .total {
-  text-align: right;
+  text-align: center;
   font-weight: bold;
   font-size: 1.3rem;
-  color: #7c662a;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  color: #28a745;
+}
+.total-titulo {
+  display: none; /* Eliminamos el texto “Total:” */
+}
+.total-valor {
+  display: block;
+  font-size: 1.2rem;
+  color: #28a745;
 }
 
 /* --- ACCIONES --- */
 .acciones {
   display: flex;
   flex-direction: column;
-  gap: 8px;
   justify-content: center;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
 }
 
 .btn-aprobar,
 .btn-rechazar {
   border: none;
   color: #fff;
-  padding: 10px 14px;
+  padding: 8px 10px;
   border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
   transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
   font-size: 0.85rem;
+  width: 110px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
-
 .btn-aprobar {
   background-color: #4caf50;
 }
@@ -236,7 +257,6 @@ h2 {
   transform: scale(1.05);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
-
 .btn-rechazar {
   background-color: #d9534f;
 }
@@ -271,45 +291,26 @@ h2 {
 }
 
 /* --- RESPONSIVE --- */
-@media (max-width: 1024px) {
-  .fila-pedido {
-    grid-template-columns: 1fr;
+@media (max-width: 900px) {
+  .tabla-pedidos,
+  .fila-pedido,
+  .tabla-pedidos td {
+    display: block;
+    width: 100%;
+  }
+
+  .tabla-pedidos thead {
+    display: none;
   }
 
   .tabla-pedidos td {
     border-right: none;
-    border-bottom: 2px dashed #c7b55c;
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
+    border-bottom: 1px dashed #c7b55c;
+    text-align: left;
   }
 
-  .tabla-pedidos td:last-child {
-    border-bottom: none;
+  .acciones {
+    flex-direction: row;
+    justify-content: center;
   }
-
-  .tabla-pedidos td::before {
-    content: attr(data-label);
-    font-weight: bold;
-    display: block;
-    color: #7c662a;
-    margin-bottom: 5px;
-  }
-}
-.total {
-  text-align: center;
-  font-weight: bold;
-}
-
-.total-titulo {
-  display: block;
-  color: #444;
-  font-size: 0.95rem;
-}
-
-.total-valor {
-  display: block;
-  color: #000;
-  font-size: 1.1rem;
-  margin-top: 4px;
 }
