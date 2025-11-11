@@ -21,19 +21,42 @@ export class PedidoFormModalComponent {
 
   dni_cliente = '';
   nombre_cliente = '';
-  telefono_cliente = '';
   direccion_cliente = '';
+  telefono_cliente: string = '+54 345 ';
   id_metodo_pago = '';
   id_modalidad_entrega = '';
   cargando = false;
 
+  costoEnvio = 2500;
+  totalConEnvio = 0;
+
+  private prefijo: string = '+54 345 ';
+
   constructor(
     private clienteService: ClienteService,
     private pedidoService: PedidoService
-  ) { }
+  ) {}
+
+  ngOnInit() {
+    this.totalConEnvio = this.total;
+  }
 
   cerrarModal() {
     this.cerrar.emit();
+  }
+
+  actualizarTotal() {
+    this.totalConEnvio =
+      this.id_modalidad_entrega === '2' ? this.total + this.costoEnvio : this.total;
+  }
+
+  capitalizar(value: string): string {
+    if (!value) return '';
+    return value
+      .toLowerCase()
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
   }
 
   buscarClientePorDni() {
@@ -43,7 +66,7 @@ export class PedidoFormModalComponent {
           if (res && res.cliente) {
             const cliente = res.cliente;
             this.nombre_cliente = cliente.nombre_cliente;
-            this.telefono_cliente = cliente.telefono_cliente;
+            this.telefono_cliente = cliente.telefono_cliente || this.prefijo;
             this.direccion_cliente = cliente.direccion_cliente;
 
             Swal.fire({
@@ -62,8 +85,58 @@ export class PedidoFormModalComponent {
     }
   }
 
+  onTelefonoInput(event: any) {
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
+
+    if (!value.startsWith(this.prefijo)) {
+      value = this.prefijo;
+    }
+
+    const regex = /^[0-9+\s]*$/;
+
+    if (!regex.test(value)) {
+      value = value.replace(/[^0-9+\s]/g, '');
+      input.value = value;
+
+      Swal.fire({
+        icon: 'warning',
+        title: 'Entrada no válida',
+        text: 'Solo se permiten números.',
+        confirmButtonColor: '#CAA021',
+        confirmButtonText: 'Entendido'
+      });
+    }
+
+    this.telefono_cliente = value;
+    input.value = this.telefono_cliente;
+  }
+
+  bloquearPrefijo(event: KeyboardEvent) {
+    const input = event.target as HTMLInputElement;
+    const cursorStart = input.selectionStart || 0;
+    const cursorEnd = input.selectionEnd || 0;
+    const prefijoLength = this.prefijo.length;
+
+    const isEverythingSelected =
+      cursorStart === 0 && cursorEnd === input.value.length;
+
+    if (!isEverythingSelected && cursorStart < prefijoLength) {
+      if (['Backspace', 'Delete', 'ArrowLeft'].includes(event.key)) {
+        event.preventDefault();
+        input.setSelectionRange(prefijoLength, prefijoLength);
+      }
+    }
+
+    if (isEverythingSelected && (event.key === 'Backspace' || event.key === 'Delete')) {
+      this.telefono_cliente = this.prefijo;
+      event.preventDefault();
+      input.value = this.prefijo;
+      input.setSelectionRange(prefijoLength, prefijoLength);
+    }
+  }
+
   enviarPedido() {
-    // 🔹 VALIDACIONES DE CAMPOS
     if (!this.dni_cliente.trim() || !this.nombre_cliente.trim() || !this.telefono_cliente.trim()) {
       Swal.fire({
         icon: 'warning',
@@ -114,7 +187,6 @@ export class PedidoFormModalComponent {
       return;
     }
 
-    // 🔹 CONTINÚA SI TODO ESTÁ COMPLETO
     this.cargando = true;
 
     const clientePayload = {
@@ -122,14 +194,14 @@ export class PedidoFormModalComponent {
       nombre_cliente: this.nombre_cliente,
       telefono_cliente: this.telefono_cliente,
       direccion_cliente:
-        this.id_modalidad_entrega == '2' ? this.direccion_cliente : ''
+        this.id_modalidad_entrega === '2' ? this.direccion_cliente : ''
     };
 
     this.clienteService.obtenerOCrearCliente(clientePayload).subscribe({
       next: () => {
         const pedidoPayload = {
           fecha_hora: new Date().toISOString().slice(0, 19).replace('T', ' '),
-          monto_total: this.total,
+          monto_total: this.totalConEnvio,
           dni_cliente: this.dni_cliente,
           id_metodo_pago: this.id_metodo_pago,
           id_estado_pedido: 1,
@@ -158,8 +230,6 @@ export class PedidoFormModalComponent {
               this.pedidoRealizado.emit();
               window.location.reload();
             });
-
-
           },
           error: (error) => {
             this.cargando = false;
@@ -174,7 +244,7 @@ export class PedidoFormModalComponent {
       },
       error: (error) => {
         this.cargando = false;
-        console.error('❌ Error al crear cliente:', error);
+        console.error('Error al crear cliente:', error);
         Swal.fire({
           icon: 'error',
           title: 'Error',
