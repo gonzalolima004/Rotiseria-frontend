@@ -13,3 +13,39 @@
   opacity: 0;
 }
 
+.acciones-admin-extra {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 20px;
+  padding-top: 80px;
+}
+
+.admin-box{
+  background: #FFFEBA;
+  border: 2px solid #FFCA2B;
+  color: #7C662A;
+  font-size: 1rem;           
+  font-weight: 600;
+  padding: 14px 22px;       
+  border-radius: 35px;     
+  cursor: pointer;
+  transition: .2s ease;
+  text-align: center;
+  white-space: nowrap;      
+}
+
+.admin-box:hover{
+  background: #FFCA2B;
+  color: white;
+  transform: scale(1.05);
+}
+
+.botones-admin-column {
+  margin-top: 35px;    
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 14px;
+}
+

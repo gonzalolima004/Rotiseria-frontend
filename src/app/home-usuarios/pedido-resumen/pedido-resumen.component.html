@@ -47,7 +47,7 @@
           
           <div class="subtotal-section">
             <p class="subtotal-label">Subtotal</p>
-            <p class="subtotal-price">${{ item.subtotal }}</p>
+            <p class="subtotal-price">$ {{ limpiarNumero(item.subtotal) }}</p>
           </div>
         </div>
       </div>
@@ -72,7 +72,7 @@
     <div class="total-section">
       <div class="total-row final">
         <strong class="total-final-label">Total a pagar</strong>
-        <strong class="total-final-value">$ {{ total }}</strong>
+        <strong class="total-final-value">${{ total }}</strong>
       </div>
     </div>
 

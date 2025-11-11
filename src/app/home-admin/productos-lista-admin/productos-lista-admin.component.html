@@ -1,7 +1,8 @@
 <div class="products-container-with-carousel">
-  <!-- Carrusel horizontal de categorías -->
+
   <div class="categoria-carousel">
-    <button class="arrow-btn" (click)="scrollLeft()">
+
+    <button class="arrow-btn" (click)="scrollLeft()" title="Scroll izquierda">
       <i class="bi bi-arrow-left"></i>
     </button>
 
@@ -10,22 +11,47 @@
         class="categoria-item"
         *ngFor="let cat of categorias"
         (click)="scrollToCategoria(cat.id_categoria)"
+        title="{{ cat.nombre_categoria }}"
       >
         <img
           [src]="cat.imagen_url || 'assets/default.jpg'"
+          alt="{{ cat.nombre_categoria }}"
           class="categoria-img"
         />
         <p class="m-0">{{ cat.nombre_categoria }}</p>
+
+        <div class="acciones-categoria">
+          <i class="bi bi-pencil" (click)="abrirModalEditar(cat); $event.stopPropagation()"></i>
+          <i class="bi bi-trash" (click)="eliminarCategoria(cat.id_categoria); $event.stopPropagation()"></i>
+        </div>
       </div>
+
+      <div class="categoria-item agregar-nueva" (click)="abrirModalCrear()">
+        <div class="plus-icon">
+          <i class="bi bi-plus-lg"></i>
+        </div>
+        <p class="m-0">Agregar</p>
+      </div>
+
     </div>
 
-    <button class="arrow-btn" (click)="scrollRight()">
+    <button class="arrow-btn" (click)="scrollRight()" title="Scroll derecha">
       <i class="bi bi-arrow-right"></i>
     </button>
+
   </div>
 
-  <!-- Contenido de productos -->
-  <div class="products-main-content">
+  <div class="modal-overlay" *ngIf="mostrarModal">
+    <div class="modal-container">
+      <app-categoria-form-modal
+        [modoEdicion]="modoEdicion"
+        [categoriaId]="categoriaId"
+        (cerrar)="cerrarModal($event)">
+      </app-categoria-form-modal>
+    </div>
+  </div>
+
+<div class="products-main-content">
     <div *ngFor="let cat of categorias" class="categoria-section">
       <div class="categoria-header">
         <h5 id="cat-{{ cat.id_categoria }}" class="categoria-heading">

@@ -81,4 +81,11 @@ export class ProductosListaComponent implements OnInit {
     }
   }
 
+  limpiarNumero(valor: any): string {
+  if (valor == null) return '';
+  const numStr = valor.toString().split('.')[0];
+  return numStr.replace(/\D/g, '');
+}
+
+
 }

@@ -26,7 +26,7 @@ export class CategoriaFormComponent {
       nombre_categoria: ['', Validators.required],
     });
   }
-
+  //guardar imagen 
   onFileChange(event: any): void {
     const file = event.target.files[0];
     if (file) {

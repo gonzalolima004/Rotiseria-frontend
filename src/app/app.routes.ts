@@ -1,13 +1,27 @@
-import { Routes, provideRouter } from '@angular/router';
+import { Routes } from '@angular/router';
+
+// 🧩 Componentes
 import { Login } from './login/login';
 import { HomeUsuariosComponent } from './home-usuarios/home-usuarios.component';
 import { HomeAdminComponent } from './home-admin/home-admin.component';
-import { AuthGuard } from './services/auth-guard';
 import { ProductoFormComponent } from './pages/producto-form/producto-form.component';
 import { ListaProductosComponent } from './pages/lista-productos/lista-productos.component';
 import { CategoriaFormComponent } from './pages/categoria-form/categoria-form.component';
 import { CategoriaListComponent } from './pages/categoria-list/categoria-list.component';
+
 import { ControlPedidoComponent } from './control-pedido/control-pedido';
+
+
+import { ForgotPasswordComponent } from './login/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './login/reset-password/reset-password.component';
+
+import { PedidosPendientesComponent } from './pages/pedidos-pendientes/pedidos-pendientes.component';
+import { AuthGuard } from './services/auth-guard';
+
+
+import { ReporteVentasComponent } from './reporte-ventas/reporte-ventas';
+
+
 export const routes: Routes = [
     { path: '', component: HomeUsuariosComponent },
     { path: 'ingresar', component: Login },
@@ -18,5 +32,12 @@ export const routes: Routes = [
     { path: 'lista-categorias', component: CategoriaListComponent, canActivate: [AuthGuard] },
     { path: 'control-pedido', component: ControlPedidoComponent, canActivate: [AuthGuard] },
     
+    { path: 'forgot-password', component: ForgotPasswordComponent },
+    { path: 'reset-password', component: ResetPasswordComponent },
+    { path: 'reporte-ventas', component: ReporteVentasComponent, canActivate: [AuthGuard] },
+    { path: 'pedidos', component: PedidosPendientesComponent, canActivate: [AuthGuard] }, 
 
+
+  // Redirección por defecto (404)
+  { path: '**', redirectTo: '' },
 ];
