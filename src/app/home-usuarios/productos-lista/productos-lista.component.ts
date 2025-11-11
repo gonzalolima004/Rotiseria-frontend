@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductoService } from '../../services/producto.service';
+import { CategoriaService } from '../../services/categoria.service';
 
 @Component({
   selector: 'app-productos-lista',
@@ -17,7 +18,10 @@ export class ProductosListaComponent implements OnInit {
 
   @ViewChild('carousel', { static: false }) carousel!: ElementRef;
 
-  constructor(private productoService: ProductoService) {}
+  constructor(
+    private productoService: ProductoService,
+    private categoriaService: CategoriaService
+  ) {}
 
   ngOnInit(): void {
     this.cargarCategorias();
@@ -25,7 +29,7 @@ export class ProductosListaComponent implements OnInit {
   }
 
   cargarCategorias() {
-    this.productoService.obtenerCategorias().subscribe({
+    this.categoriaService.obtenerCategorias().subscribe({
       next: (data) => (this.categorias = data),
       error: (err) => console.error('Error al cargar categorías', err)
     });

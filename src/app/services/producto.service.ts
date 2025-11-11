@@ -10,8 +10,6 @@ export class ProductoService {
 
   constructor(private http: HttpClient) {}
 
-  // ======= 🛒 PRODUCTOS =======
-
   obtenerProductos(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/productos`);
   }
@@ -25,7 +23,6 @@ export class ProductoService {
   }
 
   actualizarProducto(id: number, formData: FormData): Observable<any> {
-    // Laravel espera POST con _method=PUT para actualización con archivos
     return this.http.post(`${this.baseUrl}/productos/${id}?_method=PUT`, formData);
   }
 
@@ -33,13 +30,4 @@ export class ProductoService {
     return this.http.delete(`${this.baseUrl}/productos/${id}`);
   }
 
-  // ======= 🗂️ CATEGORÍAS =======
-
-  obtenerCategorias(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/categorias`);
-  }
-
-  obtenerProductosPorCategoria(id_categoria: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/categorias/${id_categoria}`);
-  }
 }

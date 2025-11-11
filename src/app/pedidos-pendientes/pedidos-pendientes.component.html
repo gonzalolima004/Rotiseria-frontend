@@ -1,3 +1,4 @@
+<app-header-admin></app-header-admin>
 <div class="body">
   <div class="contenedor-pedidos">
     <div class="titulo-con-flechas">
@@ -25,12 +26,15 @@
         </thead>
 
         <tbody>
-          <tr *ngFor="let pedido of pedidos" class="fila-pedido" [class.fila-eliminando]="pedido.id_pedido === eliminandoId">
-
+          <tr
+            *ngFor="let pedido of pedidos"
+            class="fila-pedido"
+            [class.fila-eliminando]="pedido.id_pedido === eliminandoId"
+          >
             <!-- N° Pedido -->
             <td class="text-center">
               <div class="numero-pedido">#{{ pedido.id_pedido }}</div>
-              <div class="fecha-pedido">{{ pedido.fecha_hora | date:'dd/MM/yyyy HH:mm' }}</div>
+              <div class="fecha-pedido">{{ pedido.fecha_hora | date : 'dd/MM/yyyy HH:mm' }}</div>
             </td>
 
             <!-- Cliente -->
@@ -47,7 +51,13 @@
                 <div *ngFor="let det of pedido.detalles" class="detalle-item">
                   <div class="detalle-linea">
                     <span class="detalle-label">🍽️ Producto:</span>
-                    <span class="detalle-valor">{{ det.producto?.nombre_producto }}</span>
+                    <span class="detalle-valor">
+                      {{
+                        det.id_producto === null
+                          ? 'Producto eliminado'
+                          : det.producto?.nombre_producto
+                      }}
+                    </span>
                   </div>
                   <div class="detalle-linea">
                     <span class="detalle-label">➕ Cantidad:</span>
@@ -55,13 +65,15 @@
                   </div>
                   <div class="detalle-linea">
                     <span class="detalle-label">💸 Subtotal:</span>
-                    <span class="detalle-precio">{{ det.subtotal | currency:'ARS':'symbol-narrow' }}</span>
+                    <span class="detalle-precio">{{
+                      det.subtotal | currency : 'ARS' : 'symbol-narrow'
+                    }}</span>
                   </div>
                 </div>
 
                 <!-- ✅ Modalidad -->
                 <div *ngIf="pedido.id_modalidad_entrega == 1" class="modalidad">
-                  🚶 Retiro
+                  🚶 Retiro en el local
                 </div>
                 <div *ngIf="pedido.id_modalidad_entrega == 2" class="modalidad">
                   🚚 Con envío <span class="envio-precio">(+ $2500)</span>
@@ -75,7 +87,10 @@
 
             <!-- Total -->
             <td class="text-center total-valor">
-              {{ pedido.monto_total | currency:'ARS':'symbol-narrow' }}
+              {{
+                pedido.monto_total + (pedido.id_modalidad_entrega == 2 ? 2500 : 0)
+                  | currency : 'ARS' : 'symbol-narrow'
+              }}
             </td>
 
             <!-- Acciones -->

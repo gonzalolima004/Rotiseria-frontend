@@ -1,0 +1,52 @@
+<div class="modal-container">
+  <h2>{{ modoEdicion ? 'Editar Categoría' : 'Nueva Categoría' }}</h2>
+
+  <form [formGroup]="categoriaForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label>Nombre</label>
+      <input
+        type="text"
+        formControlName="nombre_categoria"
+        class="form-control"
+        placeholder="Ej: Pizzas, Bebidas, Postres"
+      />
+    </div>
+
+    <div>
+      <label>Imagen</label>
+      <input
+        type="file"
+        class="form-control"
+        (change)="onFileChange($event)"
+        accept="image/*"
+      />
+    </div>
+
+    <div *ngIf="preview" class="preview-container">
+      <p>Vista previa:</p>
+      <img [src]="preview" alt="Vista previa" class="img-thumbnail" />
+    </div>
+
+    <button
+  type="submit"
+  class="btn btn-success w-100"
+  [disabled]="categoriaForm.invalid || cargando"
+>
+  <span *ngIf="!cargando">
+    {{ modoEdicion ? 'Editar' : 'Crear' }}
+  </span>
+  <span *ngIf="cargando">
+    {{ modoEdicion ? 'Editando...' : 'Creando...' }}
+  </span>
+</button>
+
+
+    <button
+      type="button"
+      class="btn btn-secondary w-100"
+      (click)="cerrarModal()"
+    >
+      Cancelar
+    </button>
+  </form>
+</div>

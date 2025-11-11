@@ -6,13 +6,9 @@ import { ProductoFormModal } from './producto-form-modal/producto-form-modal.com
 import { AuthService } from '../services/auth';
 import { HeaderAdminComponent } from '../../app/header-admin/header-admin';
 
-import Swal from 'sweetalert2';
-
 @Component({
   selector: 'app-home-admin',
   standalone: true,
-
-  
 
   imports: [CommonModule, ProductosListaAdminComponent, HeaderAdminComponent, ProductoFormModal],
 
@@ -54,5 +50,4 @@ export class HomeAdminComponent {
   }
  }
   
-}
 

@@ -14,7 +14,7 @@ export class HeaderAdminComponent {
   constructor(private router: Router){}
 
   irA(seccion: string){
-    this.router.navigate([`/admin/${seccion}`]);
+    this.router.navigate([`${seccion}`]);
   }
 
   cerrarSesion(){

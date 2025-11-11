@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output, OnInit, OnChanges, SimpleChange
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ProductoService } from '../../services/producto.service';
+import { CategoriaService } from '../../services/categoria.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -14,16 +15,21 @@ import Swal from 'sweetalert2';
 export class ProductoFormModal implements OnInit, OnChanges {
   @Input() modoEdicion = false;
   @Input() productoId: number | null = null;
-  @Output() cerrar = new EventEmitter<string>();
+
+  @Output() cerrar = new EventEmitter<void>();
+  @Output() actualizado = new EventEmitter<string>();
 
   productoForm: FormGroup;
   imagenSeleccionada: File | null = null;
   preview: string | ArrayBuffer | null = null;
   categorias: any[] = [];
 
+  cargando = false; // ✅ controla el estado del botón
+
   constructor(
     private fb: FormBuilder,
-    private productoService: ProductoService
+    private productoService: ProductoService,
+    private categoriaService: CategoriaService
   ) {
     this.productoForm = this.fb.group({
       nombre_producto: ['', Validators.required],
@@ -41,7 +47,6 @@ export class ProductoFormModal implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['productoId'] && this.modoEdicion && this.productoId) {
       this.productoService.obtenerProducto(this.productoId).subscribe((response: any) => {
-        console.log("PRODUCTO RECIBIDO:", response);
         const data = response.producto;
         this.productoForm.patchValue({
           nombre_producto: data.nombre_producto,
@@ -58,9 +63,9 @@ export class ProductoFormModal implements OnInit, OnChanges {
   }
 
   cargarCategorias() {
-    this.productoService.obtenerCategorias().subscribe({
-      next: (data) => (this.categorias = data),
-      error: (err) => console.error('Error al cargar categorías', err)
+    this.categoriaService.obtenerCategorias().subscribe({
+      next: data => (this.categorias = data),
+      error: err => console.error('Error al cargar categorías', err)
     });
   }
 
@@ -75,64 +80,71 @@ export class ProductoFormModal implements OnInit, OnChanges {
   }
 
   onSubmit(): void {
-    if (this.productoForm.invalid) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Completa los campos requeridos',
-        text: 'El nombre, precio y categoría son obligatorios.',
-        confirmButtonColor: '#FFCA2B'
-      }); 
-      return;
-    }
-
-    const formData = new FormData();
-
-    // ✅ Aplicando la lógica del modal funcional
-    Object.keys(this.productoForm.controls).forEach(key => {
-      const value = this.productoForm.get(key)?.value;
-
-      if (value !== null && value !== undefined) {
-        if (typeof value === 'boolean') {
-          formData.append(key, value ? '1' : '0');
-        } else {
-          formData.append(key, value);
-        }
-      }
+  if (this.productoForm.invalid) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Completa los campos requeridos',
+      text: 'El nombre, precio y categoría son obligatorios.',
+      confirmButtonColor: '#FFCA2B',
+      didOpen: popup => (popup.style.zIndex = '100000')
     });
-
-    if (this.imagenSeleccionada) {
-      formData.append('imagen', this.imagenSeleccionada);
-    }
-
-    const req = (this.modoEdicion && this.productoId)
-      ? this.productoService.actualizarProducto(this.productoId, formData)
-      : this.productoService.crearProducto(formData);
-
-    req.subscribe({
-      next: () => {
-        Swal.fire({
-          icon: 'success',
-          title: this.modoEdicion ? 'Producto actualizado' : 'Producto creado',
-          showConfirmButton: false,
-          timer: 1500
-        });
-        this.cerrar.emit('ok');
-      
-          location.reload();
-
-      },
-      error: (err) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: err.error.message || 'Ocurrió un error al guardar el producto',
-          confirmButtonColor: '#FFCA2B'
-        });
-      }
-    });
+    return;
   }
 
+  this.cargando = true;
+
+  const formData = new FormData();
+
+  Object.keys(this.productoForm.controls).forEach(key => {
+    const value = this.productoForm.get(key)?.value;
+    if (value !== null && value !== undefined) {
+      if (typeof value === 'boolean') {
+        formData.append(key, value ? '1' : '0');
+      } else {
+        formData.append(key, value);
+      }
+    }
+  });
+
+  if (this.imagenSeleccionada) {
+    formData.append('imagen', this.imagenSeleccionada);
+  }
+
+  const req = (this.modoEdicion && this.productoId)
+    ? this.productoService.actualizarProducto(this.productoId, formData)
+    : this.productoService.crearProducto(formData);
+
+  req.subscribe({
+    next: () => {
+      // 🔹 Cerramos el modal inmediatamente
+      this.cerrar.emit();
+      this.actualizado.emit('ok');
+
+      Swal.fire({
+        icon: 'success',
+        title: this.modoEdicion ? 'Producto actualizado' : 'Producto creado',
+        showConfirmButton: false,
+        timer: 1500,
+        didOpen: popup => (popup.style.zIndex = '100000')
+      });
+    },
+    error: err => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: err.error.message || 'Ocurrió un error al guardar el producto',
+        confirmButtonColor: '#FFCA2B',
+        didOpen: popup => (popup.style.zIndex = '100000')
+      });
+    },
+    complete: () => {
+      this.cargando = false;
+    }
+  });
+}
+
+
   cerrarModal(): void {
-    this.cerrar.emit('ok');
+    this.cerrar.emit();
   }
 }

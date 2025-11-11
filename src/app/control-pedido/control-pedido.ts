@@ -2,6 +2,7 @@ import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { HeaderAdminComponent } from '../header-admin/header-admin';
 import Swal from 'sweetalert2';
 
 interface Cliente {
@@ -12,7 +13,7 @@ interface Cliente {
 }
 
 interface DetallePedido {
-  id_producto: number | null;  // ← CORREGIDO: Ahora acepta null
+  id_producto: number | null;
   cantidad: number;
   subtotal: number;
   nombre_producto?: string;
@@ -45,7 +46,7 @@ interface Venta {
 @Component({
   selector: 'app-control-pedido',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HeaderAdminComponent],
   templateUrl: './control-pedido.html',
   styleUrls: ['./control-pedido.css']
 })
@@ -68,9 +69,6 @@ export class ControlPedidoComponent implements OnInit {
     this.cargarProductos();
   }
 
-  /**
-   * Obtiene los headers con el token JWT
-   */
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
     return new HttpHeaders({
@@ -97,7 +95,6 @@ export class ControlPedidoComponent implements OnInit {
     this.http.get<Pedido[]>(this.apiUrl, { headers }).subscribe({
       next: (data) => {
 
-        // Solo mostrar pedidos con estado "Confirmado"
         const pedidosVisibles = data.filter(
           pedido => pedido.estado.nombre_estado_pedido === 'Confirmado'
         );
@@ -121,9 +118,7 @@ export class ControlPedidoComponent implements OnInit {
     });
   }
 
-  // ← CORREGIDO: Ahora maneja correctamente cuando id es null
   obtenerNombreProducto(id: number | null): string {
-    // Si el id es null o undefined, significa que el producto fue eliminado
     if (id === null || id === undefined) {
       return 'Producto eliminado';
     }
@@ -132,13 +127,11 @@ export class ControlPedidoComponent implements OnInit {
     return prod ? prod.nombre_producto : 'Producto eliminado';
   }
 
-  /** ✅ Confirmado → ENTREGADO + Crear Venta */
   completarPedido(pedido: Pedido): void {
     if (pedido.estado.nombre_estado_pedido !== 'Confirmado') return;
 
     const headers = this.getAuthHeaders();
 
-    // Primero crear la venta
     const ventaData: Venta = {
       fecha: new Date().toISOString().split('T')[0],
       monto_venta: pedido.monto_total,
@@ -147,9 +140,8 @@ export class ControlPedidoComponent implements OnInit {
 
     this.http.post(this.ventasUrl, ventaData, { headers }).subscribe({
       next: () => {
-        // Una vez creada la venta, cambiar el estado del pedido a Entregado
         this.http.put(`${this.apiUrl}/${pedido.id_pedido}`, {
-          id_estado_pedido: 4 // ENTREGADO
+          id_estado_pedido: 4 
         }, { headers }).subscribe({
           next: () => {
             Swal.fire({
@@ -157,7 +149,7 @@ export class ControlPedidoComponent implements OnInit {
               title: 'Venta registrada',
               text: `El pedido #${pedido.id_pedido} fue entregado y la venta fue creada exitosamente.`,
               confirmButtonColor: '#4CAF50',
-              timer: 2000,
+              timer: 4000,
               timerProgressBar: true
             }).then(() => {
               window.location.reload();
@@ -194,7 +186,6 @@ export class ControlPedidoComponent implements OnInit {
     });
   }
 
-  /** ✅ Rechazar + SweetAlert */
   rechazarPedido(pedido: Pedido): void {
     if (pedido.estado.nombre_estado_pedido !== 'Confirmado') return;
 
@@ -213,12 +204,10 @@ export class ControlPedidoComponent implements OnInit {
 
         const headers = this.getAuthHeaders();
 
-        // Cambiar estado a rechazado
         this.http.put(`${this.apiUrl}/${pedido.id_pedido}`, {
-          id_estado_pedido: 3 // RECHAZADO
+          id_estado_pedido: 3
         }, { headers }).subscribe({
           next: () => {
-            // Luego eliminarlo
             this.http.delete(`${this.apiUrl}/${pedido.id_pedido}`, { headers }).subscribe({
               next: () => {
                 Swal.fire({

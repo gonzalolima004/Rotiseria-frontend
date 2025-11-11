@@ -37,9 +37,19 @@
       <img [src]="preview" alt="Vista previa" class="img-thumbnail">
     </div>
 
-    <button type="submit" class="btn btn-success w-100" [disabled]="productoForm.invalid">
-      {{ modoEdicion ? 'Actualizar' : 'Crear' }}
-    </button>
+    <button
+  type="submit"
+  class="btn btn-success w-100"
+  [disabled]="productoForm.invalid || cargando"
+>
+  <span *ngIf="!cargando">
+    {{ modoEdicion ? 'Editar' : 'Crear' }}
+  </span>
+  <span *ngIf="cargando">
+    {{ modoEdicion ? 'Editando...' : 'Creando...' }}
+  </span>
+</button>
+
     
     <button type="button" class="btn btn-secondary w-100" (click)="cerrarModal()">
       Cancelar

@@ -1,12 +1,13 @@
 import { Component, OnInit, Inject, PLATFORM_ID, signal } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { PedidoService } from '../../services/pedido-pendiente.service';
+import { PedidoService } from '../services/pedido-pendiente.service';
+import { HeaderAdminComponent } from '../header-admin/header-admin';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-pedidos-pendientes',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, HeaderAdminComponent],
   templateUrl: './pedidos-pendientes.component.html',
   styleUrls: ['./pedidos-pendientes.component.css']
 })
@@ -14,7 +15,7 @@ export class PedidosPendientesComponent implements OnInit {
   pedidos: any[] = [];
   cargando = true;
   cantidadPendientes = signal<number>(0);
-  eliminandoId: number | null = null; // 👈 nuevo
+  eliminandoId: number | null = null;
   isBrowser = false;
 
   constructor(
@@ -43,13 +44,12 @@ export class PedidosPendientesComponent implements OnInit {
         this.cargando = false;
       },
       error: (err) => {
-        console.error('❌ Error al obtener pedidos', err);
+        console.error('Error al obtener pedidos', err);
         this.cargando = false;
       },
     });
   }
 
-  // ✅ Confirmar pedido con animación
   confirmarPedido(pedido: any) {
     Swal.fire({
       title: `Confirmar pedido N°${pedido.id_pedido}`,
@@ -81,24 +81,22 @@ export class PedidosPendientesComponent implements OnInit {
             next: () => {
               Swal.fire({
                 icon: 'success',
-                title: '✅ Pedido confirmado',
+                title: 'Pedido confirmado',
                 text: 'El cliente ha sido notificado por WhatsApp.',
-                timer: 1500,
+                timer: 3000,
                 showConfirmButton: false,
               });
 
-              // 👇 Activar animación
               this.eliminandoId = pedido.id_pedido;
 
-              // Esperar animación y eliminar de la lista
               setTimeout(() => {
                 this.pedidos = this.pedidos.filter(p => p.id_pedido !== pedido.id_pedido);
                 this.cantidadPendientes.set(this.pedidos.length);
                 this.eliminandoId = null;
-              }, 500); // coincide con la duración CSS
+              }, 500);
             },
             error: (err) => {
-              console.error('❌ Error al confirmar pedido', err);
+              console.error('Error al confirmar pedido', err);
               Swal.fire('Error', 'No se pudo confirmar el pedido.', 'error');
             },
           });
@@ -106,7 +104,6 @@ export class PedidosPendientesComponent implements OnInit {
     });
   }
 
-  // ❌ Rechazar pedido con animación y eliminación real
 rechazarPedido(pedido: any) {
   Swal.fire({
     title: `Rechazar pedido N°${pedido.id_pedido}`,
@@ -121,16 +118,14 @@ rechazarPedido(pedido: any) {
         next: () => {
           Swal.fire({
             icon: 'info',
-            title: '🚫 Pedido eliminado',
+            title: 'Pedido eliminado',
             text: 'El pedido fue eliminado correctamente.',
             timer: 1500,
             showConfirmButton: false,
           });
 
-          // 🟡 Activar animación de salida
           this.eliminandoId = pedido.id_pedido;
 
-          // 🔄 Quitar de la lista después de la animación
           setTimeout(() => {
             this.pedidos = this.pedidos.filter(p => p.id_pedido !== pedido.id_pedido);
             this.cantidadPendientes.set(this.pedidos.length);
@@ -138,7 +133,7 @@ rechazarPedido(pedido: any) {
           }, 500);
         },
         error: (err) => {
-          console.error('❌ Error al eliminar pedido', err);
+          console.error('Error al eliminar pedido', err);
           Swal.fire('Error', 'No se pudo eliminar el pedido.', 'error');
         },
       });
