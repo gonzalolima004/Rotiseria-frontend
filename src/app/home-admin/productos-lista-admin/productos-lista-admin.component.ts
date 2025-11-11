@@ -24,7 +24,7 @@ export class ProductosListaAdminComponent implements OnInit {
 
   @ViewChild('carousel', { static: false }) carousel!: ElementRef;
 
-  constructor(private productoService: ProductoService, private categoriaService: CategoriaService) {}
+  constructor(private productoService: ProductoService, private categoriaService: CategoriaService) { }
 
   ngOnInit(): void {
     this.cargarCategorias();
@@ -68,16 +68,24 @@ export class ProductosListaAdminComponent implements OnInit {
       confirmButtonText: 'Sí, eliminar'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.categoriaService.eliminarCategoria(id).subscribe(() => {
-
-          Swal.fire({
-            icon: 'success',
-            title: 'Categoría eliminada',
-            showConfirmButton: false,
-            timer: 1500
-          });
-
-          this.cargarCategorias();
+        this.categoriaService.eliminarCategoria(id).subscribe({
+          next: () => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Categoría eliminada',
+              showConfirmButton: false,
+              timer: 1500
+            }).then(() => {
+              this.cargarCategorias(); 
+            });
+          },
+          error: () => {
+            Swal.fire({
+              icon: 'error',
+              title: 'No se puede eliminar',
+              text: 'La categoría tiene productos asociados'
+            });
+          }
         });
       }
     });

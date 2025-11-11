@@ -85,18 +85,21 @@ export class CategoriaFormModal implements OnInit, OnChanges {
 
     req.subscribe(() => {
 
-      Swal.fire({
+        Swal.fire({
         icon: 'success',
         title: this.modoEdicion ? 'Categoría actualizada' : 'Categoría creada',
         showConfirmButton: false,
         timer: 1500
+      }).then(() => {
+        this.cerrar.emit('ok'); 
       });
-
-      this.cerrar.emit('ok');
     });
   }
+  
   cerrarModal(): void {
     this.cerrar.emit('ok');
   }
 
 }
+
+

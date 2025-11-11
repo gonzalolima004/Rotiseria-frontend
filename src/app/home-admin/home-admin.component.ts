@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductosListaAdminComponent } from './productos-lista-admin/productos-lista-admin.component';
-import { Header } from '../header/header';
+import { HeaderAdminComponent } from '../../app/header-admin/header-admin';
+
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-home-admin',
   standalone: true,
-  imports: [CommonModule, ProductosListaAdminComponent, Header],
+  imports: [CommonModule, ProductosListaAdminComponent, HeaderAdminComponent],
   templateUrl: './home-admin.component.html',
   styleUrls: ['./home-admin.component.css']
 })
@@ -65,18 +66,5 @@ export class HomeAdminComponent {
   private calcularTotal() {
     this.total = this.carrito.reduce((acc, p) => acc + Number(p.subtotal), 0);
   }
-
-
-  //despues hay que eliminar esto 
-  pendiente(seccion: 'pedidos'|'ventas'){
-  Swal.fire({
-    icon: 'info',
-    title: 'Ruta pendiente',
-    text: `La URL de "${seccion}" se definirá más adelante.`,
-    confirmButtonColor: '#FFCA2B'
-  });
-}
-
-
 }
 
