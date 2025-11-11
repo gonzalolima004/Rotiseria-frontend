@@ -4,6 +4,7 @@ import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { Inject, PLATFORM_ID } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -13,6 +14,7 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
+     private router: Router, // ✅ NUEVO
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     // ✅ Verificamos si estamos en navegador antes de acceder a localStorage
@@ -56,5 +58,7 @@ export class AuthService {
       localStorage.removeItem('token');
     }
     this.isLoggedIn.set(false);
+
+    this.router.navigate(['/']);
   }
 }

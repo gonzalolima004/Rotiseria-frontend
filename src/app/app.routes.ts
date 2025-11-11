@@ -9,24 +9,22 @@ import { ListaProductosComponent } from './pages/lista-productos/lista-productos
 import { CategoriaFormComponent } from './pages/categoria-form/categoria-form.component';
 import { CategoriaListComponent } from './pages/categoria-list/categoria-list.component';
 import { PedidosPendientesComponent } from './pages/pedidos-pendientes/pedidos-pendientes.component';
-
-// 🧠 Guard
 import { AuthGuard } from './services/auth-guard';
 
+
+import { ReporteVentasComponent } from './reporte-ventas/reporte-ventas';
+
 export const routes: Routes = [
-  // Página principal para usuarios comunes
-  { path: '', component: HomeUsuariosComponent },
+    { path: '', component: HomeUsuariosComponent },
+    { path: 'ingresar', component: Login },
+    { path: 'admin', component: HomeAdmin, canActivate: [AuthGuard] },
+    { path: 'productos', component: ProductoFormComponent, canActivate: [AuthGuard] },
+    { path: 'lista-productos', component: ListaProductosComponent, canActivate: [AuthGuard] },
+    { path: 'categorias', component: CategoriaFormComponent, canActivate: [AuthGuard] },
+    { path: 'lista-categorias', component: CategoriaListComponent, canActivate: [AuthGuard] },
+    { path: 'reporte-ventas', component: ReporteVentasComponent, canActivate: [AuthGuard] },
+    { path: 'pedidos', component: PedidosPendientesComponent, canActivate: [AuthGuard] }, 
 
-  // Página de login (sin protección)
-  { path: 'ingresar', component: Login },
-
-  // Panel admin y secciones protegidas
-  { path: 'admin', component: HomeAdmin, canActivate: [AuthGuard] },
-  { path: 'productos', component: ProductoFormComponent, canActivate: [AuthGuard] },
-  { path: 'lista-productos', component: ListaProductosComponent, canActivate: [AuthGuard] },
-  { path: 'categorias', component: CategoriaFormComponent, canActivate: [AuthGuard] },
-  { path: 'lista-categorias', component: CategoriaListComponent, canActivate: [AuthGuard] },
-  { path: 'pedidos', component: PedidosPendientesComponent, canActivate: [AuthGuard] }, 
 
   // Redirección por defecto (404)
   { path: '**', redirectTo: '' },
