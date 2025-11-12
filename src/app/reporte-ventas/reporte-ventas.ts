@@ -123,27 +123,33 @@ export class ReporteVentasComponent {
       .slice(0, 3);
   });
 
-  kpiHoy = computed(() => {
-    const hoy = toDateInputString(this.today);
+    kpiHoy = computed(() => {
+    const hastaStr = this.hasta() || toDateInputString(this.today);
     return this.filas()
-      .filter((f) => f.fecha === hoy)
+      .filter(f => f.fecha === hastaStr)
       .reduce((acc, f) => acc + Number(f.monto_total ?? 0), 0);
   });
 
   kpiSemana = computed(() => {
-    const ini = toDateInputString(startOfWeek(this.today));
-    const fin = toDateInputString(this.today);
+    const hastaStr = this.hasta() || toDateInputString(this.today);
+    const baseDate = new Date(hastaStr);
+    const ini = toDateInputString(startOfWeek(baseDate));
+    const fin = hastaStr;
+
     return this.filas()
-      .filter((f) => f.fecha >= ini && f.fecha <= fin)
-      .reduce((acc, f) => acc + (f.monto_total ?? 0), 0);
+      .filter(f => f.fecha >= ini && f.fecha <= fin)
+      .reduce((acc, f) => acc + Number(f.monto_total ?? 0), 0);
   });
 
   kpiMes = computed(() => {
-    const ini = toDateInputString(startOfMonth(this.today));
-    const fin = toDateInputString(this.today);
+    const hastaStr = this.hasta() || toDateInputString(this.today);
+    const baseDate = new Date(hastaStr);
+    const ini = toDateInputString(startOfMonth(baseDate));
+    const fin = hastaStr;
+
     return this.filas()
-      .filter((f) => f.fecha >= ini && f.fecha <= fin)
-      .reduce((acc, f) => acc + (f.monto_total ?? 0), 0);
+      .filter(f => f.fecha >= ini && f.fecha <= fin)
+      .reduce((acc, f) => acc + Number(f.monto_total ?? 0), 0);
   });
 
   topClientes = computed(() => {
