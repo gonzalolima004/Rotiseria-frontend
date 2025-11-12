@@ -280,7 +280,7 @@
 }
 
 .product-card .card-img-top {
-  height: 180px;
+  height: 300px;
   object-fit: cover;
   transition: transform 0.3s ease;
 }
